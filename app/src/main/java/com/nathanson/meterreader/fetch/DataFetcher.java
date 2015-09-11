@@ -35,6 +35,7 @@ public class DataFetcher {
 
     private RequestQueue mQueue;
 
+    // TODO: use real URL from settings.
     private static String URL = "http://172.16.0.3:80/h2o.log";
 
     private static final String ID_KEY = "id";
@@ -221,6 +222,9 @@ public class DataFetcher {
         try {
             Date date = mDateFormatter.parse(timeStamp);
             mCalendar.setTime(date);
+
+            // go back a day to reflect previous day's usage
+            mCalendar.add(Calendar.DATE, -1);
 
             int day = mCalendar.get(Calendar.DAY_OF_MONTH);
             int month = mCalendar.get(Calendar.MONTH) + 1;

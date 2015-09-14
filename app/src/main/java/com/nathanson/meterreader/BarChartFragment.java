@@ -7,6 +7,7 @@ import android.graphics.PointF;
 import android.graphics.RectF;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,7 +41,8 @@ import java.util.List;
  * create an instance of this fragment.
  */
 public class BarChartFragment extends Fragment
-        implements OnChartValueSelectedListener, DataFetcher.OnDataFetchedListener {
+        implements OnChartValueSelectedListener, DataFetcher.OnDataFetchedListener,
+        SwipeRefreshLayout.OnRefreshListener {
 
     private static final String TAG = "BarChartFragment";
 
@@ -57,6 +59,7 @@ public class BarChartFragment extends Fragment
 
     protected BarChart mChart;
     private List<Meter> mMeters;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
 
 
     /**
@@ -95,7 +98,12 @@ public class BarChartFragment extends Fragment
     public void onStart() {
         super.onStart();
 
-        // go fetch data.
+        showProgress(true);
+        fetchData();
+    }
+
+
+    private void fetchData() {
         DataFetcher.getInstance(getActivity().getApplicationContext()).fetchData(this);
     }
 
@@ -105,6 +113,10 @@ public class BarChartFragment extends Fragment
 
         View barChartLayout = inflater.inflate(R.layout.fragment_bar_chart, container, false);
 
+        mSwipeRefreshLayout =
+                (SwipeRefreshLayout) barChartLayout.findViewById(R.id.chart_swipe_refresh_layout);
+
+        mSwipeRefreshLayout.setOnRefreshListener(this);
 
         mChart = (BarChart) barChartLayout.findViewById(R.id.chart1);
         mChart.setOnChartValueSelectedListener(this);
@@ -177,9 +189,15 @@ public class BarChartFragment extends Fragment
         mListener = null;
     }
 
+    private void showProgress(boolean show) {
+        ((MainActivity) getActivity()).showProgress(show);
+    }
+
     @Override
     public void onDataFetched(List<Meter> meters) {
         mMeters = meters;
+        mSwipeRefreshLayout.setRefreshing(false);
+        showProgress(false);
 
         // only reading one meter.
         // TODO: graph multiple meters?
@@ -190,6 +208,11 @@ public class BarChartFragment extends Fragment
     @Override
     public void onError(String error) {
         // TODO: what to do?
+    }
+
+    @Override
+    public void onRefresh() {
+        fetchData();
     }
 
     /**

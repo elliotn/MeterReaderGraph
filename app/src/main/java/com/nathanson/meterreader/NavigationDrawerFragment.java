@@ -53,7 +53,7 @@ public class NavigationDrawerFragment extends Fragment {
     private ListView mDrawerListView;
     private View mFragmentContainerView;
 
-    private int mCurrentSelectedPosition = 0;
+    private int mCurrentSelectedPosition = MainActivity.SETTINGS_POSITION;
     private boolean mFromSavedInstanceState;
     private boolean mUserLearnedDrawer;
 
@@ -74,8 +74,13 @@ public class NavigationDrawerFragment extends Fragment {
             mFromSavedInstanceState = true;
         }
 
+        boolean sharedPrefsPopulated =
+                MeterReaderApplication.getInstance().getSharedPrefs().isPopulated();
+
+
         // Select either the default item (0) or the last selected item.
-        selectItem(mCurrentSelectedPosition);
+        selectItem(sharedPrefsPopulated ? MainActivity.GRAPH_POSITION :
+                mCurrentSelectedPosition);
     }
 
     @Override

@@ -23,6 +23,9 @@ public class MainActivity extends Activity
      */
     private NavigationDrawerFragment mNavigationDrawerFragment;
 
+    public static final int SETTINGS_POSITION = 0;
+    public static final int GRAPH_POSITION = 1;
+
     /**
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
      */
@@ -58,10 +61,10 @@ public class MainActivity extends Activity
 
     private Fragment fragmentFactory (int position) {
         switch (position) {
-            case 0:
+            case SETTINGS_POSITION:
                 return SettingsFragment.newInstance();
 
-            case 1:
+            case GRAPH_POSITION:
                 return BarChartFragment.newInstance();
 
             default:
@@ -73,10 +76,10 @@ public class MainActivity extends Activity
         int number = Integer.valueOf(fragment.getTag());
 
         switch (number) {
-            case 0:
+            case SETTINGS_POSITION:
                 mTitle = getString(R.string.title_settings);
                 break;
-            case 1:
+            case GRAPH_POSITION:
                 mTitle = getString(R.string.title_graph);
                 break;
 

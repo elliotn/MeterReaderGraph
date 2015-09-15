@@ -3,8 +3,7 @@ package com.nathanson.meterreader.persistence;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.util.Log;
-
+import android.text.TextUtils;
 
 public class MeterReaderSharedPreferences {
     private static final String TAG = "MRSharedPreferences";
@@ -30,6 +29,15 @@ public class MeterReaderSharedPreferences {
         }
         return INSTANCE;
     }
+
+    /**
+     * Determines if shared preferences are populated.
+     * @return true if shared prefs are populated, false otherwise.
+     */
+    public boolean isPopulated() {
+        return !TextUtils.isEmpty(getUrl());
+    }
+
 
     public void setUrl(String url) {
         INSTANCE.mSharedPrefs

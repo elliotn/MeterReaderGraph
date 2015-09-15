@@ -3,6 +3,7 @@
     package="com.nathanson.meterreader" >
 
     <uses-permission android:required="true" android:name="android.permission.INTERNET"/>
+    <uses-permission android:required="true" android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
 
     <application
         android:name="com.nathanson.meterreader.MeterReaderApplication"
@@ -19,6 +20,22 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- boot completed threshold test-->
+         <receiver android:name=".threshold.ThresholdBroadcastReceiver" >
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <!-- fake action to test boot completed -->
+                <action android:name="com.nathanson.fake_boot_completed" />
+            </intent-filter>
+        </receiver>
+
+         <!-- intent service for checking threshold -->
+        <service
+            android:name=".threshold.ThresholdIntentService"
+            android:exported="false"
+            />
+
     </application>
 
 </manifest>

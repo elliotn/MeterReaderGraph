@@ -106,6 +106,28 @@ public class DataFetcher {
         // TODO: impl.
     }
 
+    /**
+     * Determines if most current consumption exceeded threshold.
+     * @param meter
+     * @return true if threshold exceeded, false otherwise.
+     */
+    public static boolean isCurrentReadingAboveThreshold(Meter meter) {
+        List<MeterReading> readings = meter.getReadings();
+        int size = readings.size();
+
+        // not enough entries to calculate consumption.
+        if (size <2) {
+            return false;
+        } else {
+            int prevConsumption = readings.get(size - 2).getConsumption();
+            int currConsumption = readings.get(size - 1).getConsumption();
+
+            int threshold = MeterReaderApplication.getInstance().getSharedPrefs()
+                    .getUsageAlertThreshold();
+
+            return ((currConsumption - prevConsumption) * 10) >= threshold;
+        }
+    }
 
     private void fetch(final OnDataFetchedListener fetchListener) {
         String url = MeterReaderApplication.getInstance().getSharedPrefs().getUrl();
@@ -208,7 +230,7 @@ public class DataFetcher {
 
     private static final String DATE_FORMAT =
             "yyyy-MM-dd'T'HH:mm:ss.SSSSSSSSSZZZZZ";
-          // 2015-09-04 T 15:47:59.170345114-06:00
+    // 2015-09-04 T 15:47:59.170345114-06:00
 
     private SimpleDateFormat mDateFormatter = new SimpleDateFormat(DATE_FORMAT);
     private Calendar mCalendar = Calendar.getInstance();

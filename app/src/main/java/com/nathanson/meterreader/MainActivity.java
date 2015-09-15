@@ -8,7 +8,6 @@ import android.app.FragmentManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -50,29 +49,39 @@ public class MainActivity extends Activity
 
     @Override
     public void onNavigationDrawerItemSelected(int position) {
-        // TODO: do read stuff, like updating graph title.
-
         // update the main content by replacing fragments
         FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction()
-                .replace(R.id.container,
-                        (position != 1) ? PlaceholderFragment.newInstance(position + 1) :
-                                new BarChartFragment()
-                )
+                .replace(R.id.container, fragmentFactory(position), String.valueOf(position))
                 .commit();
     }
 
-    public void onSectionAttached(int number) {
-        switch (number) {
+    private Fragment fragmentFactory (int position) {
+        switch (position) {
+            case 0:
+                return SettingsFragment.newInstance();
+
             case 1:
-                mTitle = getString(R.string.title_section1);
+                return BarChartFragment.newInstance();
+
+            default:
+                return new Fragment();
+        }
+    }
+
+    public void onSectionAttached(Fragment fragment) {
+        int number = Integer.valueOf(fragment.getTag());
+
+        switch (number) {
+            case 0:
+                mTitle = getString(R.string.title_settings);
                 break;
-            case 2:
+            case 1:
                 mTitle = getString(R.string.title_graph);
                 break;
-            case 3:
-                mTitle = getString(R.string.title_section3);
-                break;
+
+            default:
+                // do nothing.
         }
     }
 
@@ -119,47 +128,6 @@ public class MainActivity extends Activity
     @Override
     public void onFragmentInteraction(Uri uri) {
         // TODO: what to do here?
-    }
-
-    /**
-     * A placeholder fragment containing a simple view.
-     */
-    public static class PlaceholderFragment extends Fragment {
-        /**
-         * The fragment argument representing the section number for this
-         * fragment.
-         */
-        private static final String ARG_SECTION_NUMBER = "section_number";
-
-        /**
-         * Returns a new instance of this fragment for the given section
-         * number.
-         */
-        public static PlaceholderFragment newInstance(int sectionNumber) {
-            PlaceholderFragment fragment = new PlaceholderFragment();
-            Bundle args = new Bundle();
-            args.putInt(ARG_SECTION_NUMBER, sectionNumber);
-            fragment.setArguments(args);
-            return fragment;
-        }
-
-        public PlaceholderFragment() {
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-            return rootView;
-        }
-
-        // TODO: follow this for updating title.
-        @Override
-        public void onAttach(Activity activity) {
-            super.onAttach(activity);
-            ((MainActivity) activity).onSectionAttached(
-                    getArguments().getInt(ARG_SECTION_NUMBER));
-        }
     }
 
 }

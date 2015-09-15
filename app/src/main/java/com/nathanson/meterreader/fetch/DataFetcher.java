@@ -1,6 +1,7 @@
 package com.nathanson.meterreader.fetch;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.os.Environment;
 import android.util.JsonReader;
 import android.util.Log;
@@ -11,6 +12,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.nathanson.meterreader.MeterReaderApplication;
+import com.nathanson.meterreader.R;
 import com.nathanson.meterreader.data.Meter;
 import com.nathanson.meterreader.data.MeterReading;
 
@@ -35,8 +38,7 @@ public class DataFetcher {
 
     private RequestQueue mQueue;
 
-    // TODO: use real URL from settings.
-    private static String URL = "http://172.16.0.3:80/h2o.log";
+    private Resources mResources;
 
     private static final String ID_KEY = "id";
     private static final String TIMESTAMP_KEY = "time";
@@ -62,6 +64,8 @@ public class DataFetcher {
 
                     INSTANCE.mExternalPath =
                             Environment.getExternalStorageDirectory().getPath() + "/" + context.getPackageName()+"/";
+
+                    INSTANCE.mResources = context.getResources();
                 }
             }
         }
@@ -104,9 +108,10 @@ public class DataFetcher {
 
 
     private void fetch(final OnDataFetchedListener fetchListener) {
+        String url = MeterReaderApplication.getInstance().getSharedPrefs().getUrl();
 
         // Request a string response from the provided URL.
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, URL,
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -119,7 +124,7 @@ public class DataFetcher {
                         } catch (IOException ex) {
                             Log.e(TAG, "failed to parse data" + ex.getMessage());
                             if (fetchListener != null) {
-                                fetchListener.onError("Unable to parse server response.");
+                                fetchListener.onError(mResources.getString(R.string.data_fetch_parse_error));
                             }
                         }
                     }
@@ -128,16 +133,15 @@ public class DataFetcher {
             public void onErrorResponse(VolleyError error) {
                 Log.e(TAG, "Unable to get server response." + error.getMessage());
                 if (fetchListener != null) {
-                    fetchListener.onError("Unable to get server response.");
+                    fetchListener.onError(mResources.getString(R.string.data_fetch_server_error));
                 }
             }
         });
 
         // Add the request to the RequestQueue.
         mQueue.add(stringRequest);
-
-
     }
+
 
     /**
      * Takes response from server, multiple entries, and creates a JSON array out of them.

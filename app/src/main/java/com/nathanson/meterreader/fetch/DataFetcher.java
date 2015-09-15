@@ -106,6 +106,29 @@ public class DataFetcher {
         // TODO: impl.
     }
 
+
+    /**
+     * Calculates current meter reading.
+     * @param meter
+     * @return consumption if two or more readings have occurred, 0 otherwise.
+     */
+    public static int getCurrentReading(Meter meter) {
+        List<MeterReading> readings = meter.getReadings();
+        int size = readings.size();
+
+        // not enough entries to calculate consumption.
+        if (size <2) {
+            return 0;
+        } else {
+            int prevConsumption = readings.get(size - 2).getConsumption();
+            int currConsumption = readings.get(size - 1).getConsumption();
+
+            return (currConsumption - prevConsumption) * 10;
+        }
+    }
+
+
+
     /**
      * Determines if most current consumption exceeded threshold.
      * @param meter
@@ -119,13 +142,10 @@ public class DataFetcher {
         if (size <2) {
             return false;
         } else {
-            int prevConsumption = readings.get(size - 2).getConsumption();
-            int currConsumption = readings.get(size - 1).getConsumption();
-
             int threshold = MeterReaderApplication.getInstance().getSharedPrefs()
                     .getUsageAlertThreshold();
 
-            return ((currConsumption - prevConsumption) * 10) >= threshold;
+            return getCurrentReading(meter) >= threshold;
         }
     }
 

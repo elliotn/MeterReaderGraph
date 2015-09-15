@@ -1,15 +1,19 @@
 package com.nathanson.meterreader;
 
+import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.nathanson.meterreader.persistence.MeterReaderSharedPreferences;
+import com.nathanson.meterreader.util.ToastHelper;
 
 public class SettingsFragment extends BaseFragment
         implements View.OnClickListener {
@@ -61,13 +65,7 @@ public class SettingsFragment extends BaseFragment
     }
 
     private void saveNotification() {
-        int yOffset = getResources().getDimensionPixelSize(R.dimen.toast_y_offset);
-
-        Toast toast = Toast.makeText(getActivity().getApplicationContext(),
-                getResources().getString(R.string.toast_settings_saved),
-                Toast.LENGTH_SHORT);
-        toast.setGravity(Gravity.BOTTOM, 0, yOffset);
-        toast.show();
+        ToastHelper.showToast(getActivity().getApplicationContext(), R.string.toast_settings_saved);
     }
 
     private void save() {
@@ -89,6 +87,7 @@ public class SettingsFragment extends BaseFragment
 
         switch(v.getId()) {
             case R.id.settingsOKButton:
+                hideKeyboard();
                 save();
                 break;
             default:
@@ -96,5 +95,15 @@ public class SettingsFragment extends BaseFragment
         }
     }
 
+    // yanked from stackoverflow.
+    private void hideKeyboard() {
+        Activity activity = getActivity();
+        // Check if no view has focus:
+        View view = activity.getCurrentFocus();
+        if (view != null) {
+            InputMethodManager inputManager = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+            inputManager.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+        }
+    }
 
 }

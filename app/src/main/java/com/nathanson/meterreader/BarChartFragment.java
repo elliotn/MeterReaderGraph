@@ -27,6 +27,7 @@ import com.github.mikephil.charting.utils.ValueFormatter;
 import com.nathanson.meterreader.data.Meter;
 import com.nathanson.meterreader.data.MeterReading;
 import com.nathanson.meterreader.fetch.DataFetcher;
+import com.nathanson.meterreader.util.ToastHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -199,7 +200,10 @@ public class BarChartFragment extends BaseFragment
 
     @Override
     public void onError(String error) {
-        // TODO: what to do?
+        showProgress(false);
+        mSwipeRefreshLayout.setRefreshing(false);
+
+        ToastHelper.showToast(getActivity().getApplicationContext(), error);
     }
 
     @Override

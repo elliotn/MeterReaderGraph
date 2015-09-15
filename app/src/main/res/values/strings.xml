@@ -18,4 +18,7 @@
     <string name="alert_threshold_label">Alert Threshold</string>
     <string name="alert_threshold_hint">1000</string>
     <string name="toast_settings_saved">Settings saved.</string>
+
+    <string name="data_fetch_parse_error">Unable to parse server response.</string>
+    <string name="data_fetch_server_error">Unable to get server response.</string>
 </resources>

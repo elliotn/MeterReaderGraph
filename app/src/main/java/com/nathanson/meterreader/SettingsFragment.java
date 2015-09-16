@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.nathanson.meterreader.persistence.MeterReaderSharedPreferences;
+import com.nathanson.meterreader.threshold.ThresholdAlarm;
 import com.nathanson.meterreader.util.ToastHelper;
 
 import java.text.SimpleDateFormat;
@@ -91,10 +92,18 @@ public class SettingsFragment extends BaseFragment
         mSharedPrefs.setUrl(mUrl.getText().toString());
         mSharedPrefs.setUsageAlertThreshold(Integer.valueOf(mAlertThreshold.getText().toString()));
 
+        Context context = getActivity().getApplicationContext();
+        ThresholdAlarm alarm = new ThresholdAlarm();
+        // cancel any previously set alarm.
+        alarm.cancel(context);
+
         mSharedPrefs.setAutocheck(mAutoCheckBox.isChecked());
         if (mAutoCheckHour != -1 && mAutoCheckMin != -1) {
             mSharedPrefs.setAutocheckHour(mAutoCheckHour);
             mSharedPrefs.setAutocheckMin(mAutoCheckMin);
+
+            // set new alarm.
+            alarm.schedule(context, mAutoCheckHour, mAutoCheckMin);
         }
 
         saveNotification();
@@ -104,7 +113,7 @@ public class SettingsFragment extends BaseFragment
         mUrl.setText(mSharedPrefs.getUrl());
         mAlertThreshold.setText(String.valueOf(mSharedPrefs.getUsageAlertThreshold()));
 
-        boolean autocheck = mSharedPrefs.getAutcheck();
+        boolean autocheck = mSharedPrefs.getAutocheck();
         mAutoCheckBox.setChecked(autocheck);
 
         if (autocheck) {

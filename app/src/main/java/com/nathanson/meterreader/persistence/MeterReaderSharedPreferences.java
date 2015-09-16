@@ -77,7 +77,7 @@ public class MeterReaderSharedPreferences {
                 .apply();
     }
 
-    public boolean getAutcheck() {
+    public boolean getAutocheck() {
         return INSTANCE.mSharedPrefs
                 .getBoolean(SETTINGS_AUTOCHECK, false);
     }

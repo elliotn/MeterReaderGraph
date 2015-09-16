@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:padding="10dp">
 
     <TextView
         android:layout_width="wrap_content"
@@ -33,6 +34,26 @@
         android:ems="10"
         android:id="@+id/alertThreshold"
         android:hint="@string/alert_threshold_hint" />
+
+    <!-- TODO: add units, default with "g" -->
+
+    <!-- automatically check usage-->
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/threshold_auto_check_title"
+        android:id="@+id/autoCheckBox"
+        android:button="@null"
+        android:drawableRight="?android:attr/listChoiceIndicatorMultiple"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/autoCheckTime"
+        android:enabled="false"
+        android:text="@string/threshold_auto_check_time"/>
 
     <Button
         android:layout_width="wrap_content"

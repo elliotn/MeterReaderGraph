@@ -10,6 +10,11 @@ public class MeterReaderSharedPreferences {
 
     private static final String SETTINGS_URL = "SETTINGS_URL";
     private static final String SETTINGS_ALERT_THRESHOLD = "SETTINGS_ALERT_THRESHOLD";
+    private static final String SETTINGS_AUTOCHECK = "SETTINGS_AUTOCHECK";
+    private static final String SETTINGS_AUTOCHECK_HOUR = "SETTINGS_AUTOCHECK_HOUR";
+    private static final String SETTINGS_AUTOCHECK_MIN = "SETTINGS_AUTOCHECK_MIN";
+
+
 
 
 
@@ -53,7 +58,6 @@ public class MeterReaderSharedPreferences {
     }
 
 
-    // TODO: for future usage.
     public void setUsageAlertThreshold(int threshold) {
         INSTANCE.mSharedPrefs
                 .edit()
@@ -61,12 +65,47 @@ public class MeterReaderSharedPreferences {
                 .apply();
     }
 
-    // TODO: for future usage.
     public int getUsageAlertThreshold() {
         return INSTANCE.mSharedPrefs
                 .getInt(SETTINGS_ALERT_THRESHOLD, -1);
     }
 
+    public void setAutocheck(boolean autocheck) {
+        INSTANCE.mSharedPrefs
+                .edit()
+                .putBoolean(SETTINGS_AUTOCHECK, autocheck)
+                .apply();
+    }
+
+    public boolean getAutcheck() {
+        return INSTANCE.mSharedPrefs
+                .getBoolean(SETTINGS_AUTOCHECK, false);
+    }
+
+    public void setAutocheckHour(int hour) {
+        INSTANCE.mSharedPrefs
+                .edit()
+                .putInt(SETTINGS_AUTOCHECK_HOUR, hour)
+                .apply();
+    }
+
+    public int getAutocheckHour() {
+        return INSTANCE.mSharedPrefs
+                .getInt(SETTINGS_AUTOCHECK_HOUR, -1);
+    }
+
+
+    public void setAutocheckMin(int min) {
+        INSTANCE.mSharedPrefs
+                .edit()
+                .putInt(SETTINGS_AUTOCHECK_MIN, min)
+                .apply();
+    }
+
+    public int getAutocheckMin() {
+        return INSTANCE.mSharedPrefs
+                .getInt(SETTINGS_AUTOCHECK_MIN, -1);
+    }
 
 
 }

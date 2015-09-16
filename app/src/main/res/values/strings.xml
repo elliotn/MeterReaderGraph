@@ -25,4 +25,7 @@
 
     <string name="threshold_failure_title">Meter reading failure</string>
     <string name="threshold_failure_message">Unable to check usage.</string>
+
+    <string name="threshold_auto_check_title">Auto Threshold Check</string>
+    <string name="threshold_auto_check_time">time not set</string>
 </resources>

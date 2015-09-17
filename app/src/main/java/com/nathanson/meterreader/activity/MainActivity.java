@@ -14,7 +14,6 @@ import android.view.MenuItem;
 import android.view.Window;
 
 import com.nathanson.meterreader.R;
-import com.nathanson.meterreader.activity.AboutActivity;
 import com.nathanson.meterreader.fragment.BarChartFragment;
 import com.nathanson.meterreader.fragment.NavigationDrawerFragment;
 import com.nathanson.meterreader.fragment.SettingsFragment;
@@ -58,10 +57,16 @@ public class MainActivity extends Activity
 
     @Override
     public void onNavigationDrawerItemSelected(int position) {
+
         // update the main content by replacing fragments
         FragmentManager fragmentManager = getFragmentManager();
+
+        // use existing fragment, if possible.
+        String fragmentTag = String.valueOf(position);
+        Fragment frag = fragmentManager.findFragmentByTag(fragmentTag);
+
         fragmentManager.beginTransaction()
-                .replace(R.id.container, fragmentFactory(position), String.valueOf(position))
+                .replace(R.id.container, frag != null ? frag : fragmentFactory(position), fragmentTag)
                 .commit();
     }
 

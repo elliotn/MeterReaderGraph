@@ -35,7 +35,6 @@ public class NavigationDrawerFragment extends Fragment {
      * Remember the position of the selected item.
      */
     private static final String STATE_SELECTED_POSITION = "selected_navigation_drawer_position";
-
     /**
      * Per the design guidelines, you should show the drawer on launch until the user manually
      * expands it. This shared preference tracks this.
@@ -56,7 +55,7 @@ public class NavigationDrawerFragment extends Fragment {
     private ListView mDrawerListView;
     private View mFragmentContainerView;
 
-    private int mCurrentSelectedPosition = MainActivity.SETTINGS_POSITION;
+    private int mCurrentSelectedPosition;
     private boolean mFromSavedInstanceState;
     private boolean mUserLearnedDrawer;
 
@@ -75,15 +74,15 @@ public class NavigationDrawerFragment extends Fragment {
         if (savedInstanceState != null) {
             mCurrentSelectedPosition = savedInstanceState.getInt(STATE_SELECTED_POSITION);
             mFromSavedInstanceState = true;
+        } else {
+            boolean sharedPrefsPopulated =
+                    MeterReaderApplication.getInstance().getSharedPrefs().isPopulated();
+
+            // Select either the default item (0) or the last selected item.
+            mCurrentSelectedPosition = sharedPrefsPopulated ? MainActivity.GRAPH_POSITION :
+                    MainActivity.SETTINGS_POSITION;
         }
-
-        boolean sharedPrefsPopulated =
-                MeterReaderApplication.getInstance().getSharedPrefs().isPopulated();
-
-
-        // Select either the default item (0) or the last selected item.
-        selectItem(sharedPrefsPopulated ? MainActivity.GRAPH_POSITION :
-                mCurrentSelectedPosition);
+        selectItem(mCurrentSelectedPosition);
     }
 
     @Override

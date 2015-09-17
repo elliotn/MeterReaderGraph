@@ -5,6 +5,7 @@ import android.app.TimePickerDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +29,13 @@ public class SettingsFragment extends BaseFragment
         implements View.OnClickListener, TimePickerDialog.OnTimeSetListener {
 
     private static final String TAG = "SettingsFragment";
+
+    private static final String STATE_LOCATION = "STATE_LOCATION";
+    private static final String STATE_UNITS = "STATE_UNITS";
+    private static final String STATE_DAILY_CHECK = "STATE_DAILY_CHECK";
+    private static final String STATE_HOUR = "STATE_HOUR";
+    private static final String STATE_MIN = "STATE_MIN";
+    private static final String STATE_THRESHOLD = "STATE_THRESHOLD";
 
     private MeterReaderSharedPreferences mSharedPrefs;
 
@@ -58,6 +66,13 @@ public class SettingsFragment extends BaseFragment
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        setRetainInstance(true);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
@@ -81,14 +96,28 @@ public class SettingsFragment extends BaseFragment
 
         mSharedPrefs = MeterReaderApplication.getInstance().getSharedPrefs();
 
+        if (savedInstanceState == null) {
+            restore();
+        } else {
+            mUrl.setText(savedInstanceState.getString(STATE_LOCATION));
+            mUnits.setText(savedInstanceState.getString(STATE_UNITS));
+
+            boolean autocheck = savedInstanceState.getBoolean(STATE_DAILY_CHECK);
+            mAutoCheckBox.setChecked(autocheck);
+
+            mAutoCheckHour = savedInstanceState.getInt(STATE_HOUR);
+            mAutoCheckMin = savedInstanceState.getInt(STATE_MIN);
+            if (mAutoCheckHour != -1 && mAutoCheckMin != -1) {
+                onTimeSet(null, mAutoCheckHour, mAutoCheckMin);
+            }
+
+            mAlertThreshold.setText(savedInstanceState.getString(STATE_THRESHOLD));
+
+            setEnabledThresholdViews(autocheck);
+
+        }
+
         return settingsLayout;
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-
-        restore();
     }
 
     private void saveNotification() {
@@ -131,7 +160,6 @@ public class SettingsFragment extends BaseFragment
         mAutoCheckBox.setChecked(autocheck);
 
         if (autocheck) {
-
             mAutoCheckHour = mSharedPrefs.getAutocheckHour();
             mAutoCheckMin = mSharedPrefs.getAutocheckMin();
             if (mAutoCheckHour != -1 && mAutoCheckMin != -1) {
@@ -217,6 +245,17 @@ public class SettingsFragment extends BaseFragment
         mAutoCheckTime.setText(autoCheckTime);
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putString(STATE_LOCATION, mUrl.getText().toString());
+        outState.putString(STATE_UNITS, mUnits.getText().toString());
+        outState.putBoolean(STATE_DAILY_CHECK, mAutoCheckBox.isEnabled());
+        outState.putInt(STATE_HOUR, mAutoCheckHour);
+        outState.putInt(STATE_MIN, mAutoCheckMin);
+        outState.putString(STATE_THRESHOLD, mAlertThreshold.getText().toString());
+    }
 
 
 }

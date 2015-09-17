@@ -1,0 +1,2 @@
+# read water meter
+0 6 * * * (. /home/user/.profile; /home/user/bin/readh2ometer.sh) > /tmp/h2o.out 2>&1

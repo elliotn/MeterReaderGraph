@@ -1,0 +1,36 @@
+<b><font color="0944b5">Meter Reader v1.0 </font> </b><br>
+<br>
+<b><font color="0944b5">Purpose:</font></b>
+<br>
+Graph water usage. Get notified when too much water has been used on the previous day.</br>
+</br>
+<b><font color="0944b5">Note:</font></b><br>
+This app itself does <b>not</b> communicate with smart meters. It simply graphs the data and can send notifications.
+<br>
+<br>
+<b><font color="0944b5">Setup:</font></b><br>
+In order for this app to show usage, you will need the following:</br>
+<ul>
+<li>hardware (an rtl-sdr compatible device, such as this <a href="http://www.amazon.com/gp/product/B011HVUEME">one</a>.)</li>
+<br>
+<li><a href="https://github.com/bemasher/rtlamr">software</a> for reading the meter (use JSON output), and a web server to host the daily log.</li>
+<br>
+<li>consumption log (<a href="https://github.com/elliotn/MeterReaderGraph/tree/master/utils">here</a> you can find a script to generate/append to daily log and a cronjob to run the script daily.)</li>
+</ul>
+</br>
+<b><font color="0944b5">Usage:</font></b><br>
+After a few readings have occurred, set the URL in the app, and graph the data.</br>
+<br>
+You can also tell the app to automatically notify you if some threshold is reached via settings. (E.g., too much water was consumed.)
+</br>
+</br>
+<b><font color="0944b5">Release Notes:</font></b><br>
+v1.0 - Initial release.</br>
+</br>
+<b><font color="0944b5">Credits:</font></b><br>
+<ul>
+<li>Openclipart meter <a href="https://openclipart.org/detail/172388/power-meter">icon</a>.</li></br>
+<li><a href="https://github.com/PhilJay/MPAndroidChart">MPAndroidChart</a> for Android graphing library.</li></br>
+<li><a href="https://github.com/bemasher/rtlamr">rtlamr</a> for actually reading the meter.</li></br>
+</ul>
+<br>

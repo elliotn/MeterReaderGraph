@@ -32,6 +32,7 @@ public class SettingsFragment extends BaseFragment
     private EditText mUrl;
 
     private EditText mAlertThreshold;
+    private TextView mThresholdLabel;
     private CheckBox mAutoCheckBox;
     private TextView mAutoCheckTime;
     private int mAutoCheckHour = -1;
@@ -68,6 +69,8 @@ public class SettingsFragment extends BaseFragment
 
         mAutoCheckTime = (TextView) settingsLayout.findViewById(R.id.autoCheckTime);
         mAutoCheckTime.setOnClickListener(this);
+
+        mThresholdLabel = (TextView) settingsLayout.findViewById(R.id.alertThresholdLabel);
 
         mUnits = (EditText) settingsLayout.findViewById(R.id.units);
 
@@ -126,14 +129,20 @@ public class SettingsFragment extends BaseFragment
         mAutoCheckBox.setChecked(autocheck);
 
         if (autocheck) {
-            mAutoCheckTime.setEnabled(true);
+
             mAutoCheckHour = mSharedPrefs.getAutocheckHour();
             mAutoCheckMin = mSharedPrefs.getAutocheckMin();
             if (mAutoCheckHour != -1 && mAutoCheckMin != -1) {
                 onTimeSet(null, mAutoCheckHour, mAutoCheckMin);
             }
         }
+        setEnabledThresholdViews(autocheck);
+    }
 
+    private void setEnabledThresholdViews(boolean enabled) {
+        mAutoCheckTime.setEnabled(enabled);
+        mAlertThreshold.setEnabled(enabled);
+        mThresholdLabel.setEnabled(enabled);
     }
 
     @Override
@@ -147,7 +156,7 @@ public class SettingsFragment extends BaseFragment
 
             case R.id.autoCheckBox:
                 CheckBox cb = (CheckBox) v;
-                mAutoCheckTime.setEnabled(cb.isChecked());
+                setEnabledThresholdViews(cb.isChecked());
                 break;
 
             case R.id.autoCheckTime:

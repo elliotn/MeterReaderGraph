@@ -28,4 +28,7 @@
 
     <string name="threshold_auto_check_title">Auto Threshold Check</string>
     <string name="threshold_auto_check_time">time not set</string>
+
+    <string name="units_label">Units for graph</string>
+    <string name="default_units">g</string>
 </resources>

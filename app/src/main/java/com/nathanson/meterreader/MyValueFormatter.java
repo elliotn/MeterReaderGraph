@@ -7,6 +7,7 @@ import java.text.DecimalFormat;
 
 public class MyValueFormatter implements ValueFormatter {
 
+    private StringBuilder mStringBuilder = new StringBuilder();
     private DecimalFormat mFormat;
 
     public MyValueFormatter() {
@@ -15,7 +16,17 @@ public class MyValueFormatter implements ValueFormatter {
 
     @Override
     public String getFormattedValue(float value) {
-        return mFormat.format(value) + " g";
+
+        mStringBuilder.setLength(0);
+
+        String units = MeterReaderApplication.getInstance().getSharedPrefs().getUnits();
+
+        mStringBuilder
+                .append(mFormat.format(value))
+                .append(' ')
+                .append(units);
+
+        return mStringBuilder.toString();
     }
 
 }

@@ -19,6 +19,22 @@
         android:inputType="textUri"
         android:hint="@string/data_url_hint" />
 
+    <!-- units of measurement -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/units_label"
+        android:id="@+id/unitsLabel"
+        android:layout_marginTop="5dp" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="text"
+        android:ems="10"
+        android:id="@+id/units" />
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

@@ -5,6 +5,9 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
 
+import com.nathanson.meterreader.MeterReaderApplication;
+import com.nathanson.meterreader.R;
+
 public class MeterReaderSharedPreferences {
     private static final String TAG = "MRSharedPreferences";
 
@@ -13,9 +16,7 @@ public class MeterReaderSharedPreferences {
     private static final String SETTINGS_AUTOCHECK = "SETTINGS_AUTOCHECK";
     private static final String SETTINGS_AUTOCHECK_HOUR = "SETTINGS_AUTOCHECK_HOUR";
     private static final String SETTINGS_AUTOCHECK_MIN = "SETTINGS_AUTOCHECK_MIN";
-
-
-
+    private static final String SETTINGS_UNITS = "SETTINGS_UNITS";
 
 
     private volatile static MeterReaderSharedPreferences INSTANCE;
@@ -107,6 +108,17 @@ public class MeterReaderSharedPreferences {
                 .getInt(SETTINGS_AUTOCHECK_MIN, -1);
     }
 
+    public void setUnits(String units) {
+        INSTANCE.mSharedPrefs
+                .edit()
+                .putString(SETTINGS_UNITS, units)
+                .apply();
+    }
 
+    public String getUnits() {
+        return INSTANCE.mSharedPrefs
+                .getString(SETTINGS_UNITS, MeterReaderApplication.getInstance().getResources()
+                        .getString(R.string.default_units));
+    }
 }
 

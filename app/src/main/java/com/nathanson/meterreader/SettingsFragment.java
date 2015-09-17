@@ -30,12 +30,14 @@ public class SettingsFragment extends BaseFragment
     private MeterReaderSharedPreferences mSharedPrefs;
 
     private EditText mUrl;
+
     private EditText mAlertThreshold;
     private CheckBox mAutoCheckBox;
     private TextView mAutoCheckTime;
     private int mAutoCheckHour = -1;
     private int mAutoCheckMin = -1;
 
+    private EditText mUnits;
 
     /**
      * Use this factory method to create a new instance of
@@ -67,6 +69,8 @@ public class SettingsFragment extends BaseFragment
         mAutoCheckTime = (TextView) settingsLayout.findViewById(R.id.autoCheckTime);
         mAutoCheckTime.setOnClickListener(this);
 
+        mUnits = (EditText) settingsLayout.findViewById(R.id.units);
+
         Button okButton = (Button) settingsLayout.findViewById(R.id.settingsOKButton);
         okButton.setOnClickListener(this);
 
@@ -92,6 +96,8 @@ public class SettingsFragment extends BaseFragment
         mSharedPrefs.setUrl(mUrl.getText().toString());
         mSharedPrefs.setUsageAlertThreshold(Integer.valueOf(mAlertThreshold.getText().toString()));
 
+        mSharedPrefs.setUnits(mUnits.getText().toString());
+
         Context context = getActivity().getApplicationContext();
         ThresholdAlarm alarm = new ThresholdAlarm();
         // cancel any previously set alarm.
@@ -111,6 +117,9 @@ public class SettingsFragment extends BaseFragment
 
     private void restore() {
         mUrl.setText(mSharedPrefs.getUrl());
+
+        mUnits.setText(mSharedPrefs.getUnits());
+
         mAlertThreshold.setText(String.valueOf(mSharedPrefs.getUsageAlertThreshold()));
 
         boolean autocheck = mSharedPrefs.getAutocheck();

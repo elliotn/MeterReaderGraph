@@ -21,6 +21,9 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".AboutActivity"
+            android:label="@string/about_name"/>
+
         <!-- boot completed threshold test-->
          <receiver android:name=".threshold.ThresholdBroadcastReceiver" >
             <intent-filter>

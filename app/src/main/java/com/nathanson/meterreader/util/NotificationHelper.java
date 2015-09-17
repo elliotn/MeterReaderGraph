@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.res.Resources;
 
 import com.nathanson.meterreader.MainActivity;
+import com.nathanson.meterreader.MeterReaderApplication;
 import com.nathanson.meterreader.R;
 import com.nathanson.meterreader.data.Meter;
 import com.nathanson.meterreader.fetch.DataFetcher;
@@ -58,7 +59,8 @@ public class NotificationHelper {
 
         Resources res = context.getResources();
         String title = res.getString(R.string.threshold_notification_title);
-        String message = String.format(res.getString(R.string.threshold_notification_message), usage);
+        String units = MeterReaderApplication.getInstance().getSharedPrefs().getUnits();
+        String message = String.format(res.getString(R.string.threshold_notification_message), usage, units);
 
         showNotification(context, title, message);
     }

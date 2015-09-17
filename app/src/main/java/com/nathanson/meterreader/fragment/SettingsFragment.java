@@ -1,4 +1,4 @@
-package com.nathanson.meterreader;
+package com.nathanson.meterreader.fragment;
 
 import android.app.Activity;
 import android.app.TimePickerDialog;
@@ -15,6 +15,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
+import com.nathanson.meterreader.MeterReaderApplication;
+import com.nathanson.meterreader.R;
 import com.nathanson.meterreader.persistence.MeterReaderSharedPreferences;
 import com.nathanson.meterreader.threshold.ThresholdAlarm;
 import com.nathanson.meterreader.util.ToastHelper;

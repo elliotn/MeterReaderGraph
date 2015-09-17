@@ -1,4 +1,4 @@
-package com.nathanson.meterreader;
+package com.nathanson.meterreader.fragment;
 
 import android.app.ActionBar;
 import android.app.Activity;
@@ -19,7 +19,10 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
+
+import com.nathanson.meterreader.activity.MainActivity;
+import com.nathanson.meterreader.MeterReaderApplication;
+import com.nathanson.meterreader.R;
 
 /**
  * Fragment used for managing interactions for and presentation of a navigation drawer.

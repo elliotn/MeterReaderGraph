@@ -1,7 +1,8 @@
-package com.nathanson.meterreader;
+package com.nathanson.meterreader.util;
 
 
 import com.github.mikephil.charting.utils.ValueFormatter;
+import com.nathanson.meterreader.MeterReaderApplication;
 
 import java.text.DecimalFormat;
 

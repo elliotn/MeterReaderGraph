@@ -8,7 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 
-import com.nathanson.meterreader.MainActivity;
+import com.nathanson.meterreader.activity.MainActivity;
 import com.nathanson.meterreader.MeterReaderApplication;
 import com.nathanson.meterreader.R;
 import com.nathanson.meterreader.data.Meter;

@@ -1,4 +1,4 @@
-package com.nathanson.meterreader;
+package com.nathanson.meterreader.fragment;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -24,6 +24,9 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ValueFormatter;
+import com.nathanson.meterreader.activity.MainActivity;
+import com.nathanson.meterreader.util.MyValueFormatter;
+import com.nathanson.meterreader.R;
 import com.nathanson.meterreader.data.Meter;
 import com.nathanson.meterreader.data.MeterReading;
 import com.nathanson.meterreader.fetch.DataFetcher;

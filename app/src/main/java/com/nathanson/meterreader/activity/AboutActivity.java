@@ -1,4 +1,4 @@
-package com.nathanson.meterreader;
+package com.nathanson.meterreader.activity;
 
 
 import android.app.ActionBar;
@@ -6,6 +6,8 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.webkit.WebView;
+
+import com.nathanson.meterreader.R;
 
 public class AboutActivity extends Activity{
     @Override

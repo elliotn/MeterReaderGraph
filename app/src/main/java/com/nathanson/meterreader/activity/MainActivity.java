@@ -1,4 +1,4 @@
-package com.nathanson.meterreader;
+package com.nathanson.meterreader.activity;
 
 
 import android.app.ActionBar;
@@ -12,6 +12,12 @@ import android.support.v4.widget.DrawerLayout;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.Window;
+
+import com.nathanson.meterreader.R;
+import com.nathanson.meterreader.activity.AboutActivity;
+import com.nathanson.meterreader.fragment.BarChartFragment;
+import com.nathanson.meterreader.fragment.NavigationDrawerFragment;
+import com.nathanson.meterreader.fragment.SettingsFragment;
 
 public class MainActivity extends Activity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks, BarChartFragment.OnFragmentInteractionListener {

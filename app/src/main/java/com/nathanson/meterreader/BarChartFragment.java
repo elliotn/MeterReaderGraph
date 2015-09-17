@@ -248,7 +248,8 @@ public class BarChartFragment extends BaseFragment
             yVals1.add(new BarEntry(val, lv -1));
         }
 
-        BarDataSet set1 = new BarDataSet(yVals1, "DataSet");
+        // TODO: allow name to be updated.
+        BarDataSet set1 = new BarDataSet(yVals1, "mine");
         set1.setBarSpacePercent(35f);
 
         ArrayList<BarDataSet> dataSets = new ArrayList<BarDataSet>();

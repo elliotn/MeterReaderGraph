@@ -5,6 +5,9 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.SystemClock;
+import android.util.Log;
+
+import com.nathanson.meterreader.R;
 
 import java.util.Calendar;
 
@@ -53,11 +56,16 @@ public class ThresholdAlarm {
         alarmManager.set(AlarmManager.ELAPSED_REALTIME,
                 SystemClock.elapsedRealtime() + runTimeDelay,
                 getPendingIntent(context));
+
+        Log.i(context.getResources().getString(R.string.app_name),
+                "Threshold alarm scheduled for tomorrow at " + hour + ":" + min);
     }
 
     public void cancel(Context context) {
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         alarmManager.cancel(getPendingIntent(context));
+
+        Log.i(context.getResources().getString(R.string.app_name), "Threshold alarm canceled. ");
     }
 
 

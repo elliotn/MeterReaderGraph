@@ -1,4 +1,27 @@
+// NOTE: The file "apksign.properties" is required for release builds.
+// It must contain the following key/value pairs (with real values):
+//
+//   keystore=/some/path/keystore/some.keystore
+//   storePassword=<real password>
+//   keyAlias=<real alias>
+//   keyPassword=<real password #2>
+def apksignFile = "apksign.properties"
+File signFile = rootProject.file(apksignFile)
+
+
 apply plugin: 'com.android.application'
+
+repositories {
+    maven { url "https://jitpack.io" }
+    maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile 'com.android.support:appcompat-v7:22.0.0'
+    compile 'com.github.PhilJay:MPAndroidChart:v2.1.3'
+    compile 'com.mcxiaoke.volley:library:1.0.19'
+}
 
 android {
     compileSdkVersion 22
@@ -11,23 +34,54 @@ android {
         versionCode 1
         versionName "1.0"
     }
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+
+    // pull APK signing information from "apksign.properties"
+    // if file exists in *project* root; for this project it is
+    // the parent dir.
+    //
+    // code taken from:
+    // http://stackoverflow.com/questions/18328730/how-to-create-a-release-signed-apk-file-using-gradle
+    if (signFile.exists()) {
+
+        Properties properties = new Properties()
+        properties.load(new FileInputStream(signFile))
+        signingConfigs {
+            release {
+                storeFile rootProject.file(properties['keystore'])
+                storePassword properties['storePassword']
+                keyAlias properties['keyAlias']
+                keyPassword properties['keyPassword']
+            }
+        }
+    } else {
+        // TODO: figure out how to remove this empty rule and
+        // throw an exception when apksignFile does not exist.
+        signingConfigs {
+            release {
+            }
         }
     }
-}
-
-repositories {
-    maven { url "https://jitpack.io" }
-    maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
-}
 
 
-dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:appcompat-v7:22.0.0'
-    compile 'com.github.PhilJay:MPAndroidChart:v2.1.3'
-    compile 'com.mcxiaoke.volley:library:1.0.19'
+    buildTypes {
+        debug {
+            minifyEnabled false
+            zipAlignEnabled true
+        }
+
+        release {
+            // remove unused resources
+            shrinkResources true
+            minifyEnabled false
+
+            zipAlignEnabled true
+            signingConfig signingConfigs.release
+        }
+    }
+
 }
+
+
+
+
+

@@ -19,6 +19,7 @@ package com.nathanson.meterreader.threshold;
 import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 
 import com.nathanson.meterreader.MeterReaderApplication;
 import com.nathanson.meterreader.data.Meter;
@@ -31,12 +32,17 @@ import java.util.List;
 public class ThresholdIntentService extends IntentService
         implements DataFetcher.OnDataFetchedListener {
 
+    public static final String BOOT_EVENT = "BOOT_EVENT";
+
+    private boolean mBootEvent = false;
+
     public ThresholdIntentService() {
         super("ThresholdIntentService");
     }
 
     @Override
     protected void onHandleIntent(Intent intent) {
+        mBootEvent = intent.getBooleanExtra(BOOT_EVENT, false);
         fetchData();
     }
 
@@ -55,12 +61,13 @@ public class ThresholdIntentService extends IntentService
         if (DataFetcher.isCurrentReadingAboveThreshold(meter)) {
             NotificationHelper.showThresholdExceededNotification(getApplicationContext(), meter);
         }
-        
+
+        // TODO: any reason this would NOT be needed anymore?
         MeterReaderSharedPreferences sharedPrefs =
                 MeterReaderApplication.getInstance().getSharedPrefs();
 
         // setup alarm, if applicable.
-        if (sharedPrefs.getAutocheck()) {
+        if (mBootEvent && sharedPrefs.getAutocheck()) {
             int hour = sharedPrefs.getAutocheckHour();
             int min = sharedPrefs.getAutocheckMin();
             if (hour != -1 && min != -1) {

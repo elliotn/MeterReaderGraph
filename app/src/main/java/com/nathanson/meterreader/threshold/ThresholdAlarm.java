@@ -38,14 +38,13 @@ public class ThresholdAlarm {
 
 
     /**
-     * Returns the offset between now and when the alarm should go off tomorrow.
+     * Returns when the alarm should go off tomorrow.
      * @param hour
      * @param min
      * @return offset for running tomorrow.
      */
-    private long runTimeDelay(int hour, int min) {
+    private long runTime(int hour, int min) {
         Calendar cal = Calendar.getInstance();
-        long now = cal.getTimeInMillis();
 
         // tomorrow.
         cal.add(Calendar.DAY_OF_YEAR, 1);
@@ -57,20 +56,22 @@ public class ThresholdAlarm {
 
         long runTime = cal.getTimeInMillis();
 
-        return runTime - now;
+        return runTime;
     }
 
 
     public void schedule(Context context, int hour, int min) {
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
-        long runTimeDelay= runTimeDelay(hour, min);
-        if (runTimeDelay <= 0) {
+        long runTime= runTime(hour, min);
+        if (runTime <= 0) {
             return;
         }
 
-        alarmManager.set(AlarmManager.ELAPSED_REALTIME,
-                SystemClock.elapsedRealtime() + runTimeDelay,
+        // setup repeating alarm for tomorrow.
+        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP,
+                runTime,
+                AlarmManager.INTERVAL_DAY,
                 getPendingIntent(context));
 
         Log.i(context.getResources().getString(R.string.app_name),

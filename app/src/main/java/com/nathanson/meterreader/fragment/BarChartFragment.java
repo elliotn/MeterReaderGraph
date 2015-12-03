@@ -52,6 +52,9 @@ import com.nathanson.meterreader.util.ToastHelper;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -78,10 +81,11 @@ public class BarChartFragment extends BaseFragment
 
     private OnFragmentInteractionListener mListener;
 
-    protected CombinedChart mChart;
-    private List<Meter> mMeters;
-    private SwipeRefreshLayout mSwipeRefreshLayout;
 
+    @Bind(R.id.chart1) CombinedChart mChart;
+    @Bind(R.id.chart_swipe_refresh_layout) SwipeRefreshLayout mSwipeRefreshLayout;
+
+    private List<Meter> mMeters;
 
     /**
      * Use this factory method to create a new instance of
@@ -126,12 +130,10 @@ public class BarChartFragment extends BaseFragment
 
         View barChartLayout = inflater.inflate(R.layout.fragment_bar_chart, container, false);
 
-        mSwipeRefreshLayout =
-                (SwipeRefreshLayout) barChartLayout.findViewById(R.id.chart_swipe_refresh_layout);
+        ButterKnife.bind(this, barChartLayout);
 
         mSwipeRefreshLayout.setOnRefreshListener(this);
 
-        mChart = (CombinedChart) barChartLayout.findViewById(R.id.chart1);
         mChart.setOnChartValueSelectedListener(this);
 
         mChart.setDrawBarShadow(false);

@@ -25,24 +25,28 @@ import android.webkit.WebView;
 
 import com.nathanson.meterreader.R;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 public class AboutActivity extends Activity{
+
+    @Bind(R.id.aboutWv) WebView mAbout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_about);
+        ButterKnife.bind(this);
 
         ActionBar actionBar = getActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 
-        // using webview to display html (bold, breaks, etc)
-        final WebView about =
-            (WebView) findViewById(R.id.aboutWv);
-
         final CharSequence aboutChars = getResources().getText(R.string.about);
 
+        // using webview to display html (bold, breaks, etc)
         // display it
-        about.loadData(aboutChars.toString(), "text/html", "utf-8");
+        mAbout.loadData(aboutChars.toString(), "text/html", "utf-8");
     }
 
     @Override

@@ -41,6 +41,9 @@ import com.nathanson.meterreader.util.ToastHelper;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 public class SettingsFragment extends BaseFragment
         implements View.OnClickListener, TimePickerDialog.OnTimeSetListener {
 
@@ -55,16 +58,17 @@ public class SettingsFragment extends BaseFragment
 
     private MeterReaderSharedPreferences mSharedPrefs;
 
-    private EditText mUrl;
+    @Bind(R.id.dataUrl) EditText mUrl;
 
-    private EditText mAlertThreshold;
-    private TextView mThresholdLabel;
-    private CheckBox mAutoCheckBox;
-    private TextView mAutoCheckTime;
+    @Bind(R.id.alertThreshold) EditText mAlertThreshold;
+    @Bind(R.id.alertThresholdLabel) TextView mThresholdLabel;
+    @Bind(R.id.autoCheckBox) CheckBox mAutoCheckBox;
+    @Bind(R.id.autoCheckTime) TextView mAutoCheckTime;
     private int mAutoCheckHour = -1;
     private int mAutoCheckMin = -1;
 
-    private EditText mUnits;
+    @Bind(R.id.units) EditText mUnits;
+    @Bind(R.id.settingsOKButton) Button mOkButton;
 
     /**
      * Use this factory method to create a new instance of
@@ -94,21 +98,11 @@ public class SettingsFragment extends BaseFragment
 
         View settingsLayout = inflater.inflate(R.layout.fragment_settings, container, false);
 
-        mUrl = (EditText) settingsLayout.findViewById(R.id.dataUrl);
-        mAlertThreshold = (EditText) settingsLayout.findViewById(R.id.alertThreshold);
+        ButterKnife.bind(this, settingsLayout);
 
-        mAutoCheckBox = (CheckBox) settingsLayout.findViewById(R.id.autoCheckBox);
         mAutoCheckBox.setOnClickListener(this);
-
-        mAutoCheckTime = (TextView) settingsLayout.findViewById(R.id.autoCheckTime);
         mAutoCheckTime.setOnClickListener(this);
-
-        mThresholdLabel = (TextView) settingsLayout.findViewById(R.id.alertThresholdLabel);
-
-        mUnits = (EditText) settingsLayout.findViewById(R.id.units);
-
-        Button okButton = (Button) settingsLayout.findViewById(R.id.settingsOKButton);
-        okButton.setOnClickListener(this);
+        mOkButton.setOnClickListener(this);
 
         mSharedPrefs = MeterReaderApplication.getInstance().getSharedPrefs();
 

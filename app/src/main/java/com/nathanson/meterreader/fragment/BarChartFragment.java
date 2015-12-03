@@ -19,33 +19,34 @@ package com.nathanson.meterreader.fragment;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Fragment;
-import android.graphics.PointF;
-import android.graphics.RectF;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.charts.CombinedChart;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.CombinedData;
 import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ValueFormatter;
-import com.nathanson.meterreader.activity.MainActivity;
-import com.nathanson.meterreader.util.MyValueFormatter;
 import com.nathanson.meterreader.R;
+import com.nathanson.meterreader.activity.MainActivity;
 import com.nathanson.meterreader.data.Meter;
 import com.nathanson.meterreader.data.MeterReading;
 import com.nathanson.meterreader.fetch.DataFetcher;
+import com.nathanson.meterreader.util.MyValueFormatter;
 import com.nathanson.meterreader.util.ToastHelper;
 
 import java.util.ArrayList;
@@ -77,7 +78,7 @@ public class BarChartFragment extends BaseFragment
 
     private OnFragmentInteractionListener mListener;
 
-    protected BarChart mChart;
+    protected CombinedChart mChart;
     private List<Meter> mMeters;
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
@@ -130,7 +131,7 @@ public class BarChartFragment extends BaseFragment
 
         mSwipeRefreshLayout.setOnRefreshListener(this);
 
-        mChart = (BarChart) barChartLayout.findViewById(R.id.chart1);
+        mChart = (CombinedChart) barChartLayout.findViewById(R.id.chart1);
         mChart.setOnChartValueSelectedListener(this);
 
         mChart.setDrawBarShadow(false);
@@ -253,11 +254,15 @@ public class BarChartFragment extends BaseFragment
         Meter meter = mMeters.get(0);
         List<MeterReading> readings = meter.getReadings();
 
+        ArrayList<Entry> averageEntries = new ArrayList<Entry>();
+
         // build up X-axis labels; e.g., dates.
         // build up Y-axis with values;
         // skip first date as we can't determine consumption.
         ArrayList<String> xVals = new ArrayList<String>();
         ArrayList<BarEntry> yVals1 = new ArrayList<BarEntry>();
+        float runningTotal = 0;
+        float dailyAverage;
         for (int lv = 1; lv < count; lv++) {
             MeterReading prevReading = readings.get(lv - 1);
             MeterReading currReading = readings.get(lv);
@@ -265,6 +270,12 @@ public class BarChartFragment extends BaseFragment
             xVals.add(currReading.getTimeStamp());
             float val = (currReading.getConsumption() - prevReading.getConsumption()) * 10;
             yVals1.add(new BarEntry(val, lv -1));
+
+
+            // calc & store daily average.
+            runningTotal += val;
+            dailyAverage = runningTotal / lv;
+            averageEntries.add(new Entry(dailyAverage, lv -1));
         }
 
         // TODO: allow name to be updated.
@@ -274,32 +285,55 @@ public class BarChartFragment extends BaseFragment
         ArrayList<BarDataSet> dataSets = new ArrayList<BarDataSet>();
         dataSets.add(set1);
 
-        BarData data = new BarData(xVals, dataSets);
-        data.setValueFormatter(new MyValueFormatter());
-        data.setValueTextSize(10f);
+        // bar chart data
+        BarData barData = new BarData(xVals, dataSets);
+        barData.setValueFormatter(new MyValueFormatter());
+        barData.setValueTextSize(10f);
 
-        mChart.setData(data);
+
+        // line chart data
+        LineData lineData = new LineData();
+        LineDataSet set = new LineDataSet(averageEntries, "average");
+        int lineColor = Color.rgb(251, 169, 165);
+        set.setColor(lineColor);
+        set.setLineWidth(1.5f);
+        set.setDrawCircles(false);
+        set.setFillColor(lineColor);
+        set.setDrawCubic(true);
+        set.setDrawValues(false);
+        set.setAxisDependency(YAxis.AxisDependency.LEFT);
+        lineData.addDataSet(set);
+
+
+        CombinedData combinedData = new CombinedData(getDates(meter.getReadings()));
+        combinedData.setData(barData);
+        combinedData.setData(lineData);
+
+        mChart.setData(combinedData);
         mChart.invalidate();
+    }
+
+    private ArrayList<String> getDates(List<MeterReading> readings) {
+        ArrayList<String> xVals = new ArrayList<String>();
+
+        int count = readings.size();
+        // skip first reading.
+        for (int lv = 1; lv < count; lv++) {
+            MeterReading currReading = readings.get(lv);
+
+            xVals.add(currReading.getTimeStamp());
+        }
+
+       return xVals;
     }
 
     @SuppressLint("NewApi")
     public void onValueSelected(Entry e, int dataSetIndex, Highlight h) {
-
-        if (e == null)
-            return;
-
-        RectF bounds = mChart.getBarBounds((BarEntry) e);
-        PointF position = mChart.getPosition(e, YAxis.AxisDependency.LEFT);
-
-        Log.i("bounds", bounds.toString());
-        Log.i("position", position.toString());
-
-        Log.i("x-index",
-                "low: " + mChart.getLowestVisibleXIndex() + ", high: "
-                        + mChart.getHighestVisibleXIndex());
+       // do nothing.
     }
 
     public void onNothingSelected() {
+        // do nothing.
     };
 
 

@@ -10,9 +10,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.nathanson.meterreader.MeterReaderApplication;
 import com.nathanson.meterreader.R;
 import com.nathanson.meterreader.activity.MainActivity;
 import com.nathanson.meterreader.data.Meter;
+import com.nathanson.meterreader.data.MeterReading;
 import com.nathanson.meterreader.fetch.DataFetcher;
 
 import java.util.List;
@@ -24,6 +26,9 @@ public class StatsFragment extends BaseFragment
         implements DataFetcher.OnDataFetchedListener {
 
         private static final String TAG = "StatsFragment";
+        private static final String USAGE_FORMAT = "%,d %s";
+
+
         @Bind(R.id.last30Days)
         TextView last30Days;
         @Bind(R.id.last30DaysUsage)
@@ -50,6 +55,12 @@ public class StatsFragment extends BaseFragment
         TextView billComparisonUsageData;
         @Bind(R.id.billComparisonDailyAveData)
         TextView billComparisonDailyAveData;
+
+
+        private List<Meter> mMeters;
+
+        private final String UNITS = MeterReaderApplication.getInstance().getSharedPrefs().getUnits();
+
 
         public static StatsFragment newInstance() {
                 return new StatsFragment();
@@ -106,6 +117,12 @@ public class StatsFragment extends BaseFragment
         @Override
         public void onDataFetched(List<Meter> meters) {
                 showProgress(false);
+
+                mMeters = meters;
+
+                // only reading one meter.
+                // TODO: graph multiple meters?
+                calcLast30Days(mMeters.get(0));
         }
 
         @Override
@@ -113,4 +130,36 @@ public class StatsFragment extends BaseFragment
                 // TODO: implement
         }
 
+
+        private void calcLast30Days(Meter meter) {
+
+                List<MeterReading> readings = meter.getReadings();
+
+                int readingCount = readings.size();
+                if (readingCount < 30) {
+                        return;
+                }
+
+
+                int usage = 0;
+                for (int lv=readingCount - 30 + 1; lv < readingCount; lv++) {
+                        MeterReading prevReading = readings.get(lv - 1);
+                        MeterReading currReading = readings.get(lv);
+
+                        usage += (currReading.getConsumption() - prevReading.getConsumption()) * 10;
+                }
+
+                int average = usage / 30;
+
+                String usageString = String.format(USAGE_FORMAT, usage, UNITS);
+                String averageString = String.format(USAGE_FORMAT, average, UNITS);
+
+
+                last30DaysUsageData.setText(usageString);
+                last30DaysDailyAveData.setText(averageString);
+        }
+
+        private void reset() {
+                // TODO: clean calculated stuff when calculate is called.
+        }
 }

@@ -38,7 +38,6 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.text.Format;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -271,7 +270,6 @@ public class DataFetcher {
 
     private SimpleDateFormat mDateFormatter = new SimpleDateFormat(DATE_FORMAT);
     private Calendar mCalendar = Calendar.getInstance();
-    private String TIMESTAMP_FORMAT = "%d/%d/%02d";
 
 
     /**
@@ -293,7 +291,7 @@ public class DataFetcher {
             int month = mCalendar.get(Calendar.MONTH) + 1;
             int year = mCalendar.get(Calendar.YEAR);
 
-            formattedTimeStamp = String.format(TIMESTAMP_FORMAT, month, day, year);
+            formattedTimeStamp = String.format(MeterReading.TIMESTAMP_FORMAT, month, day, year);
 
         } catch (ParseException exc) {
             // TODO: implement

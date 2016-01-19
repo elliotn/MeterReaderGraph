@@ -25,6 +25,8 @@ public class MeterReading {
     private int mConsumption;
 
 
+    public static final String TIMESTAMP_FORMAT = "%d/%d/%02d";
+
 
     public MeterReading (String timeStamp, int consumption) {
         mTimeStamp = timeStamp;

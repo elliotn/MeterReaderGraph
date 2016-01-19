@@ -69,6 +69,7 @@
             android:id="@+id/last30DaysDailyAveData"
             android:paddingLeft="5dp"
             android:gravity="right"
+            android:paddingBottom="10dp"
             />
     </TableRow>
 

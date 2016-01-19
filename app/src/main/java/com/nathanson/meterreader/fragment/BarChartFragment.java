@@ -269,7 +269,7 @@ public class BarChartFragment extends BaseFragment
             MeterReading prevReading = readings.get(lv - 1);
             MeterReading currReading = readings.get(lv);
 
-            xVals.add(currReading.getTimeStamp());
+            xVals.add(removeYearFromDate(currReading.getTimeStamp()));
             float val = (currReading.getConsumption() - prevReading.getConsumption()) * 10;
             yVals1.add(new BarEntry(val, lv -1));
 
@@ -315,6 +315,11 @@ public class BarChartFragment extends BaseFragment
         mChart.invalidate();
     }
 
+    private String removeYearFromDate(String date) {
+        int currLen = date.length();
+        return date.substring(0, currLen - 5);
+    }
+
     private ArrayList<String> getDates(List<MeterReading> readings) {
         ArrayList<String> xVals = new ArrayList<String>();
 
@@ -323,15 +328,15 @@ public class BarChartFragment extends BaseFragment
         for (int lv = 1; lv < count; lv++) {
             MeterReading currReading = readings.get(lv);
 
-            xVals.add(currReading.getTimeStamp());
+            xVals.add(removeYearFromDate(currReading.getTimeStamp()));
         }
 
-       return xVals;
+        return xVals;
     }
 
     @SuppressLint("NewApi")
     public void onValueSelected(Entry e, int dataSetIndex, Highlight h) {
-       // do nothing.
+        // do nothing.
     }
 
     public void onNothingSelected() {

@@ -38,6 +38,7 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.text.Format;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -270,7 +271,7 @@ public class DataFetcher {
 
     private SimpleDateFormat mDateFormatter = new SimpleDateFormat(DATE_FORMAT);
     private Calendar mCalendar = Calendar.getInstance();
-    private StringBuilder mTimeStamp = new StringBuilder();
+    private String TIMESTAMP_FORMAT = "%d/%d/%02d";
 
 
     /**
@@ -279,7 +280,7 @@ public class DataFetcher {
      * @return
      */
     private String formatTimeStamp(String timeStamp) {
-        mTimeStamp.setLength(0);
+        String formattedTimeStamp = null;
 
         try {
             Date date = mDateFormatter.parse(timeStamp);
@@ -290,17 +291,16 @@ public class DataFetcher {
 
             int day = mCalendar.get(Calendar.DAY_OF_MONTH);
             int month = mCalendar.get(Calendar.MONTH) + 1;
+            int year = mCalendar.get(Calendar.YEAR);
 
-            mTimeStamp.append(month)
-                    .append("/")
-                    .append(day);
+            formattedTimeStamp = String.format(TIMESTAMP_FORMAT, month, day, year);
 
         } catch (ParseException exc) {
             // TODO: implement
             Log.e(TAG, "date parsing error.");
         }
 
-        return mTimeStamp.toString();
+        return formattedTimeStamp;
     }
 
 

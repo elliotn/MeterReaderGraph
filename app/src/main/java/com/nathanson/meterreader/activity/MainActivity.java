@@ -33,6 +33,7 @@ import com.nathanson.meterreader.R;
 import com.nathanson.meterreader.fragment.BarChartFragment;
 import com.nathanson.meterreader.fragment.NavigationDrawerFragment;
 import com.nathanson.meterreader.fragment.SettingsFragment;
+import com.nathanson.meterreader.fragment.StatsFragment;
 
 public class MainActivity extends Activity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks, BarChartFragment.OnFragmentInteractionListener {
@@ -46,6 +47,7 @@ public class MainActivity extends Activity
 
     public static final int SETTINGS_POSITION = 0;
     public static final int GRAPH_POSITION = 1;
+    public static final int STATS_POSITION = 2;
 
     /**
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
@@ -94,6 +96,9 @@ public class MainActivity extends Activity
             case GRAPH_POSITION:
                 return BarChartFragment.newInstance();
 
+            case STATS_POSITION:
+                return StatsFragment.newInstance();
+
             default:
                 return new Fragment();
         }
@@ -108,6 +113,10 @@ public class MainActivity extends Activity
                 break;
             case GRAPH_POSITION:
                 mTitle = getString(R.string.title_graph);
+                break;
+
+            case STATS_POSITION:
+                mTitle = getString(R.string.title_stats);
                 break;
 
             default:

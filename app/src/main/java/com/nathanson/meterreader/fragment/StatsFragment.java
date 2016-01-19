@@ -17,13 +17,14 @@ import com.nathanson.meterreader.data.Meter;
 import com.nathanson.meterreader.data.MeterReading;
 import com.nathanson.meterreader.fetch.DataFetcher;
 
+import java.util.Calendar;
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class StatsFragment extends BaseFragment
-        implements DataFetcher.OnDataFetchedListener {
+        implements DataFetcher.OnDataFetchedListener, View.OnClickListener {
 
         private static final String TAG = "StatsFragment";
         private static final String USAGE_FORMAT = "%,d %s";
@@ -95,6 +96,7 @@ public class StatsFragment extends BaseFragment
 
                 ButterKnife.bind(this, statsLayout);
 
+                billComparisonCalculate.setOnClickListener(this);
 
                 return statsLayout;
         }
@@ -123,6 +125,9 @@ public class StatsFragment extends BaseFragment
                 // only reading one meter.
                 // TODO: graph multiple meters?
                 calcLast30Days(mMeters.get(0));
+                setInitialDates(mMeters.get(0));
+
+                billComparisonCalculate.setEnabled(true);
         }
 
         @Override
@@ -130,6 +135,18 @@ public class StatsFragment extends BaseFragment
                 // TODO: implement
         }
 
+        @Override
+        public void onClick(View v) {
+                switch (v.getId()) {
+                        case R.id.billComparisonCalculate:
+                                calcBillComparison(mMeters.get(0));
+                                break;
+
+                        default:
+                                // do nothing.
+                                break;
+                }
+        }
 
         private void calcLast30Days(Meter meter) {
 
@@ -157,6 +174,73 @@ public class StatsFragment extends BaseFragment
 
                 last30DaysUsageData.setText(usageString);
                 last30DaysDailyAveData.setText(averageString);
+        }
+
+        private void calcBillComparison(Meter meter) {
+
+                String[] startDateArray = billComparisonStartDate.getText().toString()
+                        .split("/");
+
+                String[] endDateArray =  billComparisonEndDate.getText().toString()
+                        .split("/");
+
+                int startIndex = findIndex(meter, 0, billComparisonStartDate.getText().toString());
+                int endIndex = findIndex(meter, startIndex, billComparisonEndDate.getText().toString());
+
+                List<MeterReading> readings = meter.getReadings();
+
+                int readingCount = endIndex - startIndex;
+
+                int usage = 0;
+                for (int lv=startIndex + 1; lv < endIndex; lv++) {
+                        MeterReading prevReading = readings.get(lv - 1);
+                        MeterReading currReading = readings.get(lv);
+
+                        usage += (currReading.getConsumption() - prevReading.getConsumption()) * 10;
+                }
+
+                int average = usage / readingCount;
+
+                String usageString = String.format(USAGE_FORMAT, usage, UNITS);
+                String averageString = String.format(USAGE_FORMAT, average, UNITS);
+
+
+                billComparisonUsageData.setText(usageString);
+                billComparisonDailyAveData.setText(averageString);
+        }
+
+        private int findIndex(Meter meter, int startIndex, String findDate) {
+                List<MeterReading> readings = meter.getReadings();
+
+                int readingCount = readings.size();
+                if (readingCount == 0) {
+                        return -1;
+                }
+
+                for (int lv=startIndex; lv < readingCount; lv++) {
+                        if (findDate.equals(readings.get(lv).getTimeStamp())) {
+                                // success
+                                return lv;
+                        }
+                }
+
+                return -1;
+        }
+
+
+        private void setInitialDates(Meter meter) {
+                List<MeterReading> readings = meter.getReadings();
+
+                int readingCount = readings.size();
+                if (readingCount == 0) {
+                        return;
+                }
+
+                String firstReading = readings.get(0).getTimeStamp();
+                String lastReading = readings.get(readingCount - 1).getTimeStamp();
+
+                billComparisonStartDate.setText(firstReading);
+                billComparisonEndDate.setText(lastReading);
         }
 
         private void reset() {

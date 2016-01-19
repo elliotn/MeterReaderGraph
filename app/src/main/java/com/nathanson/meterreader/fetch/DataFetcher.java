@@ -270,7 +270,6 @@ public class DataFetcher {
 
     private SimpleDateFormat mDateFormatter = new SimpleDateFormat(DATE_FORMAT);
     private Calendar mCalendar = Calendar.getInstance();
-    private StringBuilder mTimeStamp = new StringBuilder();
 
 
     /**
@@ -279,7 +278,7 @@ public class DataFetcher {
      * @return
      */
     private String formatTimeStamp(String timeStamp) {
-        mTimeStamp.setLength(0);
+        String formattedTimeStamp = null;
 
         try {
             Date date = mDateFormatter.parse(timeStamp);
@@ -290,17 +289,16 @@ public class DataFetcher {
 
             int day = mCalendar.get(Calendar.DAY_OF_MONTH);
             int month = mCalendar.get(Calendar.MONTH) + 1;
+            int year = mCalendar.get(Calendar.YEAR);
 
-            mTimeStamp.append(month)
-                    .append("/")
-                    .append(day);
+            formattedTimeStamp = String.format(MeterReading.TIMESTAMP_FORMAT, month, day, year);
 
         } catch (ParseException exc) {
             // TODO: implement
             Log.e(TAG, "date parsing error.");
         }
 
-        return mTimeStamp.toString();
+        return formattedTimeStamp;
     }
 
 

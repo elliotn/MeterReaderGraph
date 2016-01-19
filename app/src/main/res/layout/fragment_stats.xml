@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+   Copyright (C) 2015 Elliot Nathanson
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+
+
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:stretchColumns="2"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
+    xmlns:tools="http://schemas.android.com/tools"
+    >
+
+    <!-- last 30 days title -->
+    <TextView
+        android:id="@+id/last30Days"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/last30DaysTitle"
+        android:paddingBottom="5dp"
+        tools:text="Last 30 days"
+        />
+
+    <!-- last 30 days details -->
+    <TableRow>
+        <TextView
+            tools:text="Usage:"
+            android:id="@+id/last30DaysUsage"
+            android:text="@string/last30DaysUsage"
+            android:gravity="right"
+            />
+
+        <!-- 30 day usage -->
+        <TextView
+            android:id="@+id/last30DaysUsageData"
+            android:gravity="right"
+            android:paddingLeft="5dp"
+            tools:text="2,000g"
+            />
+    </TableRow>
+
+
+    <TableRow>
+        <TextView
+            tools:text="Daily average:"
+            android:text="@string/last30DaysDailyAve"
+            android:gravity="right"
+            />
+
+        <!-- 30 day daily average -->
+        <TextView
+            tools:text="150g"
+            android:id="@+id/last30DaysDailyAveData"
+            android:paddingLeft="5dp"
+            android:gravity="right"
+            android:paddingBottom="10dp"
+            />
+    </TableRow>
+
+
+    <!-- separator -->
+    <View
+        android:layout_height="2dip"
+        android:background="#FF909090"
+        android:paddingTop="10dp"
+        />
+
+
+
+    <!-- bill comparison -->
+    <TextView
+        android:id="@+id/billComparison"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:paddingTop="10dp"
+        android:paddingBottom="5dp"
+        android:text="@string/billComparisonTitle"
+        tools:text="Bill Comparison"
+        />
+
+
+    <TableRow>
+        <TextView android:id="@+id/billComparisonStart"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:text="@string/billComparisonStartDate"
+            tools:text="Start date:"/>
+
+        <TextView
+            android:id="@+id/billComparisonStartDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="5dp"
+            tools:text="11/15/2015"/>
+    </TableRow>
+
+
+    <TableRow>
+        <TextView android:id="@+id/billComparisonEnd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:text="@string/billComparisonEndDate"
+            tools:text="End date:"/>
+
+        <TextView
+            android:id="@+id/billComparisonEndDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:paddingLeft="5dp"
+            tools:text="1/14/2016"
+            />
+    </TableRow>
+
+    <Button android:id="@+id/billComparisonCalculate"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:enabled="false"
+        android:text="@string/billComparisonCalculate"/>
+
+
+    <!-- last 30 days details -->
+    <TableRow>
+        <TextView
+            tools:text="Usage:"
+            android:id="@+id/billComparisonUsage"
+            android:text="@string/last30DaysUsage"
+            android:gravity="right"
+            />
+
+        <!-- 30 day usage -->
+        <TextView
+            android:id="@+id/billComparisonUsageData"
+            android:gravity="right"
+            android:paddingLeft="5dp"
+            tools:text="2,000g"
+            />
+    </TableRow>
+
+
+    <TableRow>
+        <TextView
+            tools:text="Daily average:"
+            android:text="@string/last30DaysDailyAve"
+            android:gravity="right"
+            />
+
+        <!-- 30 day daily average -->
+        <TextView
+            tools:text="150g"
+            android:id="@+id/billComparisonDailyAveData"
+            android:paddingLeft="5dp"
+            android:gravity="right"
+            />
+    </TableRow>
+
+
+</TableLayout>

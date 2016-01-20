@@ -43,6 +43,10 @@
   <string name="billComparisonStartDate">Start date:</string>
   <string name="billComparisonEndDate">End date:</string>
 
+  <string name="start_date_error">Start date must be %1$s or later.</string>
+  <string name="end_date_error">End date must be %1$s or earlier.</string>
+  <string name="end_date_before_start_date_error">End date must be later than start date.</string>
+
 
 
 

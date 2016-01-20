@@ -33,7 +33,9 @@ import com.nathanson.meterreader.activity.MainActivity;
 import com.nathanson.meterreader.data.Meter;
 import com.nathanson.meterreader.data.MeterReading;
 import com.nathanson.meterreader.fetch.DataFetcher;
+import com.nathanson.meterreader.util.ToastHelper;
 
+import java.util.Calendar;
 import java.util.List;
 
 import butterknife.Bind;
@@ -45,6 +47,8 @@ public class StatsFragment extends BaseFragment
         private static final String TAG = "StatsFragment";
         private static final String USAGE_FORMAT = "%,d %s";
 
+        private long mMinDate;
+        private long mMaxDate;
 
         @Bind(R.id.last30Days)
         TextView last30Days;
@@ -142,8 +146,10 @@ public class StatsFragment extends BaseFragment
 
                 // only reading one meter.
                 // TODO: graph multiple meters?
-                calcLast30Days(mMeters.get(0));
-                setInitialDates(mMeters.get(0));
+                Meter firstMeter = mMeters.get(0);
+                getMinMaxDates(firstMeter);
+                calcLast30Days(firstMeter);
+                setInitialDates(firstMeter);
 
                 billComparisonCalculate.setEnabled(true);
         }
@@ -176,13 +182,40 @@ public class StatsFragment extends BaseFragment
                 }
         }
 
+        private Calendar mCal = Calendar.getInstance();
+
+        private long getDateInMillis(String date) {
+                String[] dateArray = date.split("/");
+
+                mCal.set(Calendar.MONTH, Integer.valueOf(dateArray[0]) + 1);
+                mCal.set(Calendar.DAY_OF_MONTH, Integer.valueOf(dateArray[1]));
+                mCal.set(Calendar.YEAR, Integer.valueOf(dateArray[2]));
+
+                return mCal.getTimeInMillis();
+        }
+
+        private void getMinMaxDates(Meter meter) {
+                List<MeterReading> readings = meter.getReadings();
+                mMinDate = getDateInMillis(readings.get(0).getTimeStamp());
+                mMaxDate = getDateInMillis(readings.get(readings.size() - 1).getTimeStamp());
+        }
 
         private DatePickerDialog.OnDateSetListener mStartDateListener =
                 new DatePickerDialog.OnDateSetListener() {
                         @Override
                         public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                                 String formattedTimeStamp = String.format(MeterReading.TIMESTAMP_FORMAT, monthOfYear + 1, dayOfMonth, year);
-                                billComparisonStartDate.setText(formattedTimeStamp);
+                                long selectedStartDate = getDateInMillis(formattedTimeStamp);
+
+                                // show toast if selected date is before first meter reading.
+                                if (selectedStartDate < mMinDate) {
+                                        String minDate = mMeters.get(0).getReadings().get(0).getTimeStamp();
+                                        String error = String.format(getResources().getString(R.string.start_date_error), minDate);
+
+                                        ToastHelper.showToast(getActivity().getApplicationContext(), error);
+                                } else {
+                                        billComparisonStartDate.setText(formattedTimeStamp);
+                                }
                         }
                 };
 
@@ -192,7 +225,21 @@ public class StatsFragment extends BaseFragment
                         @Override
                         public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                                 String formattedTimeStamp = String.format(MeterReading.TIMESTAMP_FORMAT, monthOfYear + 1, dayOfMonth, year);
-                                billComparisonEndDate.setText(formattedTimeStamp);
+                                long selectedEndDate = getDateInMillis(formattedTimeStamp);
+
+                                if (selectedEndDate > mMaxDate) {
+                                        List<MeterReading> readings = mMeters.get(0).getReadings();
+
+                                        String maxDate = readings.get(readings.size() - 1).getTimeStamp();
+                                        String error = String.format(getResources().getString(R.string.end_date_error), maxDate);
+
+                                        ToastHelper.showToast(getActivity().getApplicationContext(), error);
+                                } else if (selectedEndDate <= getDateInMillis(billComparisonStartDate.getText().toString())) {
+                                        // ensure end date is after start date.
+                                        ToastHelper.showToast(getActivity().getApplicationContext(), getResources().getString(R.string.end_date_before_start_date_error));
+                                } else {
+                                        billComparisonEndDate.setText(formattedTimeStamp);
+                                }
                         }
                 };
 

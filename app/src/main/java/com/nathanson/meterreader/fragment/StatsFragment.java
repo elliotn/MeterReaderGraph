@@ -225,15 +225,18 @@ public class StatsFragment extends BaseFragment
                         @Override
                         public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                                 String formattedTimeStamp = String.format(MeterReading.TIMESTAMP_FORMAT, monthOfYear + 1, dayOfMonth, year);
-                                long selectedStartDate = getDateInMillis(formattedTimeStamp);
+                                long selectedEndDate = getDateInMillis(formattedTimeStamp);
 
-                                if (selectedStartDate > mMaxDate) {
+                                if (selectedEndDate > mMaxDate) {
                                         List<MeterReading> readings = mMeters.get(0).getReadings();
 
                                         String maxDate = readings.get(readings.size() - 1).getTimeStamp();
                                         String error = String.format(getResources().getString(R.string.end_date_error), maxDate);
 
                                         ToastHelper.showToast(getActivity().getApplicationContext(), error);
+                                } else if (selectedEndDate <= getDateInMillis(billComparisonStartDate.getText().toString())) {
+                                        // ensure end date is after start date.
+                                        ToastHelper.showToast(getActivity().getApplicationContext(), getResources().getString(R.string.end_date_before_start_date_error));
                                 } else {
                                         billComparisonEndDate.setText(formattedTimeStamp);
                                 }

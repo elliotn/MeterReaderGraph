@@ -21,19 +21,16 @@ import android.app.TimePickerDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.text.format.DateFormat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.nathanson.meterreader.MeterReaderApplication;
 import com.nathanson.meterreader.R;
+import com.nathanson.meterreader.databinding.FragmentSettingsBinding;
 import com.nathanson.meterreader.persistence.MeterReaderSharedPreferences;
 import com.nathanson.meterreader.threshold.ThresholdAlarm;
 import com.nathanson.meterreader.util.ToastHelper;
@@ -41,8 +38,6 @@ import com.nathanson.meterreader.util.ToastHelper;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-import butterknife.Bind;
-import butterknife.ButterKnife;
 
 public class SettingsFragment extends BaseFragment
         implements View.OnClickListener, TimePickerDialog.OnTimeSetListener {
@@ -58,17 +53,10 @@ public class SettingsFragment extends BaseFragment
 
     private MeterReaderSharedPreferences mSharedPrefs;
 
-    @Bind(R.id.dataUrl) EditText mUrl;
+    private FragmentSettingsBinding binding;
 
-    @Bind(R.id.alertThreshold) EditText mAlertThreshold;
-    @Bind(R.id.alertThresholdLabel) TextView mThresholdLabel;
-    @Bind(R.id.autoCheckBox) CheckBox mAutoCheckBox;
-    @Bind(R.id.autoCheckTime) TextView mAutoCheckTime;
     private int mAutoCheckHour = -1;
     private int mAutoCheckMin = -1;
-
-    @Bind(R.id.units) EditText mUnits;
-    @Bind(R.id.settingsOKButton) Button mOkButton;
 
     /**
      * Use this factory method to create a new instance of
@@ -93,27 +81,31 @@ public class SettingsFragment extends BaseFragment
     }
 
     @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View settingsLayout = inflater.inflate(R.layout.fragment_settings, container, false);
+        binding = FragmentSettingsBinding.inflate(inflater);
 
-        ButterKnife.bind(this, settingsLayout);
-
-        mAutoCheckBox.setOnClickListener(this);
-        mAutoCheckTime.setOnClickListener(this);
-        mOkButton.setOnClickListener(this);
+        binding.autoCheckBox.setOnClickListener(this);
+        binding.autoCheckTime.setOnClickListener(this);
+        binding.settingsOKButton.setOnClickListener(this);
 
         mSharedPrefs = MeterReaderApplication.getInstance().getSharedPrefs();
 
         if (savedInstanceState == null) {
             restore();
         } else {
-            mUrl.setText(savedInstanceState.getString(STATE_LOCATION));
-            mUnits.setText(savedInstanceState.getString(STATE_UNITS));
+            binding.dataUrl.setText(savedInstanceState.getString(STATE_LOCATION));
+            binding.units.setText(savedInstanceState.getString(STATE_UNITS));
 
             boolean autocheck = savedInstanceState.getBoolean(STATE_DAILY_CHECK);
-            mAutoCheckBox.setChecked(autocheck);
+            binding.autoCheckBox.setChecked(autocheck);
 
             mAutoCheckHour = savedInstanceState.getInt(STATE_HOUR);
             mAutoCheckMin = savedInstanceState.getInt(STATE_MIN);
@@ -121,13 +113,13 @@ public class SettingsFragment extends BaseFragment
                 onTimeSet(null, mAutoCheckHour, mAutoCheckMin);
             }
 
-            mAlertThreshold.setText(savedInstanceState.getString(STATE_THRESHOLD));
+            binding.alertThreshold.setText(savedInstanceState.getString(STATE_THRESHOLD));
 
             setEnabledThresholdViews(autocheck);
 
         }
 
-        return settingsLayout;
+        return binding.getRoot();
     }
 
     private void saveNotification() {
@@ -137,17 +129,17 @@ public class SettingsFragment extends BaseFragment
     private void save() {
 
         // TODO: data validation?
-        mSharedPrefs.setUrl(mUrl.getText().toString());
-        mSharedPrefs.setUsageAlertThreshold(Integer.valueOf(mAlertThreshold.getText().toString()));
+        mSharedPrefs.setUrl(binding.dataUrl.getText().toString());
+        mSharedPrefs.setUsageAlertThreshold(Integer.valueOf(binding.alertThreshold.getText().toString()));
 
-        mSharedPrefs.setUnits(mUnits.getText().toString());
+        mSharedPrefs.setUnits(binding.units.getText().toString());
 
         Context context = getActivity().getApplicationContext();
         ThresholdAlarm alarm = new ThresholdAlarm();
         // cancel any previously set alarm.
         alarm.cancel(context);
 
-        mSharedPrefs.setAutocheck(mAutoCheckBox.isChecked());
+        mSharedPrefs.setAutocheck(binding.autoCheckBox.isChecked());
         if (mAutoCheckHour != -1 && mAutoCheckMin != -1) {
             mSharedPrefs.setAutocheckHour(mAutoCheckHour);
             mSharedPrefs.setAutocheckMin(mAutoCheckMin);
@@ -160,14 +152,14 @@ public class SettingsFragment extends BaseFragment
     }
 
     private void restore() {
-        mUrl.setText(mSharedPrefs.getUrl());
+        binding.dataUrl.setText(mSharedPrefs.getUrl());
 
-        mUnits.setText(mSharedPrefs.getUnits());
+        binding.units.setText(mSharedPrefs.getUnits());
 
-        mAlertThreshold.setText(String.valueOf(mSharedPrefs.getUsageAlertThreshold()));
+        binding.alertThreshold.setText(String.valueOf(mSharedPrefs.getUsageAlertThreshold()));
 
         boolean autocheck = mSharedPrefs.getAutocheck();
-        mAutoCheckBox.setChecked(autocheck);
+        binding.autoCheckBox.setChecked(autocheck);
 
         if (autocheck) {
             mAutoCheckHour = mSharedPrefs.getAutocheckHour();
@@ -180,9 +172,9 @@ public class SettingsFragment extends BaseFragment
     }
 
     private void setEnabledThresholdViews(boolean enabled) {
-        mAutoCheckTime.setEnabled(enabled);
-        mAlertThreshold.setEnabled(enabled);
-        mThresholdLabel.setEnabled(enabled);
+        binding.autoCheckTime.setEnabled(enabled);
+        binding.alertThreshold.setEnabled(enabled);
+        binding.alertThresholdLabel.setEnabled(enabled);
     }
 
     @Override
@@ -252,19 +244,19 @@ public class SettingsFragment extends BaseFragment
 
         String autoCheckTime = dateFormat.format(cal.getTime());
 
-        mAutoCheckTime.setText(autoCheckTime);
+        binding.autoCheckTime.setText(autoCheckTime);
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        outState.putString(STATE_LOCATION, mUrl.getText().toString());
-        outState.putString(STATE_UNITS, mUnits.getText().toString());
-        outState.putBoolean(STATE_DAILY_CHECK, mAutoCheckBox.isEnabled());
+        outState.putString(STATE_LOCATION, binding.dataUrl.getText().toString());
+        outState.putString(STATE_UNITS, binding.units.getText().toString());
+        outState.putBoolean(STATE_DAILY_CHECK, binding.autoCheckBox.isEnabled());
         outState.putInt(STATE_HOUR, mAutoCheckHour);
         outState.putInt(STATE_MIN, mAutoCheckMin);
-        outState.putString(STATE_THRESHOLD, mAlertThreshold.getText().toString());
+        outState.putString(STATE_THRESHOLD, binding.alertThreshold.getText().toString());
     }
 
 

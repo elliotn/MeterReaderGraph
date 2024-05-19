@@ -22,12 +22,12 @@ import android.app.Fragment;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.github.mikephil.charting.charts.CombinedChart;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
@@ -41,19 +41,16 @@ import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ValueFormatter;
-import com.nathanson.meterreader.R;
 import com.nathanson.meterreader.activity.MainActivity;
 import com.nathanson.meterreader.data.Meter;
 import com.nathanson.meterreader.data.MeterReading;
+import com.nathanson.meterreader.databinding.FragmentBarChartBinding;
 import com.nathanson.meterreader.fetch.DataFetcher;
 import com.nathanson.meterreader.util.MyValueFormatter;
 import com.nathanson.meterreader.util.ToastHelper;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import butterknife.Bind;
-import butterknife.ButterKnife;
 
 
 /**
@@ -81,9 +78,7 @@ public class BarChartFragment extends BaseFragment
 
     private OnFragmentInteractionListener mListener;
 
-
-    @Bind(R.id.chart1) CombinedChart mChart;
-    @Bind(R.id.chart_swipe_refresh_layout) SwipeRefreshLayout mSwipeRefreshLayout;
+    private FragmentBarChartBinding binding;
 
     private List<Meter> mMeters;
 
@@ -128,56 +123,54 @@ public class BarChartFragment extends BaseFragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View barChartLayout = inflater.inflate(R.layout.fragment_bar_chart, container, false);
+        binding = FragmentBarChartBinding.inflate(inflater);
 
-        ButterKnife.bind(this, barChartLayout);
+        binding.chartSwipeRefreshLayout.setOnRefreshListener(this);
 
-        mSwipeRefreshLayout.setOnRefreshListener(this);
+        binding.chart1.setOnChartValueSelectedListener(this);
 
-        mChart.setOnChartValueSelectedListener(this);
+        binding.chart1.setDrawBarShadow(false);
+        binding.chart1.setDrawValueAboveBar(true);
 
-        mChart.setDrawBarShadow(false);
-        mChart.setDrawValueAboveBar(true);
-
-        mChart.setDescription("");
+        binding.chart1.setDescription("");
 
         // TODO: do we care about this?
         // if more than 60 entries are displayed in the chart, no values will be
         // drawn
-        mChart.setMaxVisibleValueCount(60);
+        binding.chart1.setMaxVisibleValueCount(60);
 
         // scaling can now only be done on x- and y-axis separately
-        mChart.setPinchZoom(false);
+        binding.chart1.setPinchZoom(false);
 
-        mChart.setDrawGridBackground(false);
+        binding.chart1.setDrawGridBackground(false);
 
-        XAxis xAxis = mChart.getXAxis();
+        XAxis xAxis = binding.chart1.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxis.setDrawGridLines(false);
         xAxis.setSpaceBetweenLabels(2);
 
         ValueFormatter custom = new MyValueFormatter();
 
-        YAxis leftAxis = mChart.getAxisLeft();
+        YAxis leftAxis = binding.chart1.getAxisLeft();
         leftAxis.setLabelCount(8, false);
         leftAxis.setValueFormatter(custom);
         leftAxis.setPosition(YAxis.YAxisLabelPosition.OUTSIDE_CHART);
         leftAxis.setSpaceTop(15f);
 
-        YAxis rightAxis = mChart.getAxisRight();
+        YAxis rightAxis = binding.chart1.getAxisRight();
         rightAxis.setDrawGridLines(false);
         rightAxis.setLabelCount(8, false);
         rightAxis.setValueFormatter(custom);
         rightAxis.setSpaceTop(15f);
 
-        Legend l = mChart.getLegend();
+        Legend l = binding.chart1.getLegend();
         l.setPosition(Legend.LegendPosition.BELOW_CHART_LEFT);
         l.setForm(Legend.LegendForm.SQUARE);
         l.setFormSize(9f);
         l.setTextSize(11f);
         l.setXEntrySpace(4f);
 
-        return barChartLayout;
+        return binding.getRoot();
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -199,6 +192,12 @@ public class BarChartFragment extends BaseFragment
     }
 
     @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
+    }
+
+    @Override
     public void onDetach() {
         super.onDetach();
         mListener = null;
@@ -211,7 +210,8 @@ public class BarChartFragment extends BaseFragment
     @Override
     public void onDataFetched(List<Meter> meters) {
         mMeters = meters;
-        mSwipeRefreshLayout.setRefreshing(false);
+
+        binding.chartSwipeRefreshLayout.setRefreshing(false);
         showProgress(false);
 
         // only reading one meter.
@@ -223,7 +223,7 @@ public class BarChartFragment extends BaseFragment
     @Override
     public void onError(String error) {
         showProgress(false);
-        mSwipeRefreshLayout.setRefreshing(false);
+        binding.chartSwipeRefreshLayout.setRefreshing(false);
 
         ToastHelper.showToast(getActivity().getApplicationContext(), error);
     }
@@ -311,8 +311,8 @@ public class BarChartFragment extends BaseFragment
         combinedData.setData(barData);
         combinedData.setData(lineData);
 
-        mChart.setData(combinedData);
-        mChart.invalidate();
+        binding.chart1.setData(combinedData);
+        binding.chart1.invalidate();
     }
 
     private String removeYearFromDate(String date) {

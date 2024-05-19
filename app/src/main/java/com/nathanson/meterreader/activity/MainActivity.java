@@ -24,10 +24,11 @@ import android.app.FragmentManager;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.widget.DrawerLayout;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.Window;
+
+import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.nathanson.meterreader.R;
 import com.nathanson.meterreader.fragment.BarChartFragment;

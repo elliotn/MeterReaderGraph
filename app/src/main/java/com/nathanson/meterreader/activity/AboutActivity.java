@@ -21,23 +21,18 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.webkit.WebView;
 
 import com.nathanson.meterreader.R;
-
-import butterknife.Bind;
-import butterknife.ButterKnife;
+import com.nathanson.meterreader.databinding.ActivityAboutBinding;
 
 public class AboutActivity extends Activity{
-
-    @Bind(R.id.aboutWv) WebView mAbout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_about);
-        ButterKnife.bind(this);
+        ActivityAboutBinding binding = ActivityAboutBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
         ActionBar actionBar = getActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
@@ -46,7 +41,7 @@ public class AboutActivity extends Activity{
 
         // using webview to display html (bold, breaks, etc)
         // display it
-        mAbout.loadData(aboutChars.toString(), "text/html", "utf-8");
+        binding.aboutWv.loadData(aboutChars.toString(), "text/html", "utf-8");
     }
 
     @Override

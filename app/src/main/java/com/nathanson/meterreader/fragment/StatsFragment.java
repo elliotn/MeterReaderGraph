@@ -17,29 +17,25 @@
 package com.nathanson.meterreader.fragment;
 
 
+import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.DatePicker;
-import android.widget.TextView;
 
 import com.nathanson.meterreader.MeterReaderApplication;
 import com.nathanson.meterreader.R;
 import com.nathanson.meterreader.activity.MainActivity;
 import com.nathanson.meterreader.data.Meter;
 import com.nathanson.meterreader.data.MeterReading;
+import com.nathanson.meterreader.databinding.FragmentStatsBinding;
 import com.nathanson.meterreader.fetch.DataFetcher;
 import com.nathanson.meterreader.util.ToastHelper;
 
 import java.util.Calendar;
 import java.util.List;
-
-import butterknife.Bind;
-import butterknife.ButterKnife;
 
 public class StatsFragment extends BaseFragment
         implements DataFetcher.OnDataFetchedListener, View.OnClickListener {
@@ -47,35 +43,37 @@ public class StatsFragment extends BaseFragment
         private static final String TAG = "StatsFragment";
         private static final String USAGE_FORMAT = "%,d %s";
 
+        private FragmentStatsBinding binding;
+
         private long mMinDate;
         private long mMaxDate;
 
-        @Bind(R.id.last30Days)
-        TextView last30Days;
-        @Bind(R.id.last30DaysUsage)
-        TextView last30DaysUsage;
-        @Bind(R.id.last30DaysUsageData)
-        TextView last30DaysUsageData;
-        @Bind(R.id.last30DaysDailyAveData)
-        TextView last30DaysDailyAveData;
-        @Bind(R.id.billComparison)
-        TextView billComparison;
-        @Bind(R.id.billComparisonStart)
-        TextView billComparisonStart;
-        @Bind(R.id.billComparisonStartDate)
-        TextView billComparisonStartDate;
-        @Bind(R.id.billComparisonEnd)
-        TextView billComparisonEnd;
-        @Bind(R.id.billComparisonEndDate)
-        TextView billComparisonEndDate;
-        @Bind(R.id.billComparisonCalculate)
-        Button billComparisonCalculate;
-        @Bind(R.id.billComparisonUsage)
-        TextView billComparisonUsage;
-        @Bind(R.id.billComparisonUsageData)
-        TextView billComparisonUsageData;
-        @Bind(R.id.billComparisonDailyAveData)
-        TextView billComparisonDailyAveData;
+//        @Bind(R.id.last30Days)
+//        TextView last30Days;
+//        @Bind(R.id.last30DaysUsage)
+//        TextView last30DaysUsage;
+//        @Bind(R.id.last30DaysUsageData)
+//        TextView last30DaysUsageData;
+//        @Bind(R.id.last30DaysDailyAveData)
+//        TextView last30DaysDailyAveData;
+//        @Bind(R.id.billComparison)
+//        TextView billComparison;
+//        @Bind(R.id.billComparisonStart)
+//        TextView billComparisonStart;
+//        @Bind(R.id.billComparisonStartDate)
+//        TextView billComparisonStartDate;
+//        @Bind(R.id.billComparisonEnd)
+//        TextView billComparisonEnd;
+//        @Bind(R.id.billComparisonEndDate)
+//        TextView billComparisonEndDate;
+//        @Bind(R.id.billComparisonCalculate)
+//        Button billComparisonCalculate;
+//        @Bind(R.id.billComparisonUsage)
+//        TextView billComparisonUsage;
+//        @Bind(R.id.billComparisonUsageData)
+//        TextView billComparisonUsageData;
+//        @Bind(R.id.billComparisonDailyAveData)
+//        TextView billComparisonDailyAveData;
 
 
         private List<Meter> mMeters;
@@ -108,25 +106,25 @@ public class StatsFragment extends BaseFragment
         }
 
 
-        @Nullable
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-                View statsLayout = inflater.inflate(R.layout.fragment_stats, container, false);
+                binding = FragmentStatsBinding.inflate(inflater);
+//                View statsLayout = inflater.inflate(R.layout.fragment_stats, container, false);
+//
+//                ButterKnife.bind(this, statsLayout);
 
-                ButterKnife.bind(this, statsLayout);
+                binding.billComparisonCalculate.setOnClickListener(this);
+                binding.billComparisonStartDate.setOnClickListener(this);
+                binding.billComparisonEndDate.setOnClickListener(this);
 
-                billComparisonCalculate.setOnClickListener(this);
-                billComparisonStartDate.setOnClickListener(this);
-                billComparisonEndDate.setOnClickListener(this);
-
-                return statsLayout;
+                return binding.getRoot();
         }
 
         @Override
         public void onDestroyView() {
                 super.onDestroyView();
-                ButterKnife.unbind(this);
+                binding = null;
         }
 
 
@@ -151,7 +149,7 @@ public class StatsFragment extends BaseFragment
                 calcLast30Days(firstMeter);
                 setInitialDates(firstMeter);
 
-                billComparisonCalculate.setEnabled(true);
+                binding.billComparisonCalculate.setEnabled(true);
         }
 
         @Override
@@ -159,6 +157,7 @@ public class StatsFragment extends BaseFragment
                 // TODO: implement
         }
 
+        @SuppressLint("NonConstantResourceId")
         @Override
         public void onClick(View v) {
                 switch (v.getId()) {
@@ -168,12 +167,12 @@ public class StatsFragment extends BaseFragment
 
                         case R.id.billComparisonStartDate:
                                 resetBillComparisonResults();
-                                showDatePicker(billComparisonStartDate.getText().toString(), mStartDateListener);
+                                showDatePicker(binding.billComparisonStartDate.getText().toString(), mStartDateListener);
                                 break;
 
                         case R.id.billComparisonEndDate:
                                 resetBillComparisonResults();
-                                showDatePicker(billComparisonEndDate.getText().toString(), mEndDateListener);
+                                showDatePicker(binding.billComparisonEndDate.getText().toString(), mEndDateListener);
                                 break;
 
                         default:
@@ -214,7 +213,7 @@ public class StatsFragment extends BaseFragment
 
                                         ToastHelper.showToast(getActivity().getApplicationContext(), error);
                                 } else {
-                                        billComparisonStartDate.setText(formattedTimeStamp);
+                                        binding.billComparisonStartDate.setText(formattedTimeStamp);
                                 }
                         }
                 };
@@ -234,11 +233,11 @@ public class StatsFragment extends BaseFragment
                                         String error = String.format(getResources().getString(R.string.end_date_error), maxDate);
 
                                         ToastHelper.showToast(getActivity().getApplicationContext(), error);
-                                } else if (selectedEndDate <= getDateInMillis(billComparisonStartDate.getText().toString())) {
+                                } else if (selectedEndDate <= getDateInMillis(binding.billComparisonStartDate.getText().toString())) {
                                         // ensure end date is after start date.
                                         ToastHelper.showToast(getActivity().getApplicationContext(), getResources().getString(R.string.end_date_before_start_date_error));
                                 } else {
-                                        billComparisonEndDate.setText(formattedTimeStamp);
+                                        binding.billComparisonEndDate.setText(formattedTimeStamp);
                                 }
                         }
                 };
@@ -279,20 +278,20 @@ public class StatsFragment extends BaseFragment
                 String averageString = String.format(USAGE_FORMAT, average, UNITS);
 
 
-                last30DaysUsageData.setText(usageString);
-                last30DaysDailyAveData.setText(averageString);
+                binding.last30DaysUsageData.setText(usageString);
+                binding.last30DaysDailyAveData.setText(averageString);
         }
 
         private void calcBillComparison(Meter meter) {
 
-                String[] startDateArray = billComparisonStartDate.getText().toString()
+                String[] startDateArray = binding.billComparisonStartDate.getText().toString()
                         .split("/");
 
-                String[] endDateArray =  billComparisonEndDate.getText().toString()
+                String[] endDateArray =  binding.billComparisonEndDate.getText().toString()
                         .split("/");
 
-                int startIndex = findIndex(meter, 0, billComparisonStartDate.getText().toString());
-                int endIndex = findIndex(meter, startIndex, billComparisonEndDate.getText().toString());
+                int startIndex = findIndex(meter, 0, binding.billComparisonStartDate.getText().toString());
+                int endIndex = findIndex(meter, startIndex, binding.billComparisonEndDate.getText().toString());
 
                 List<MeterReading> readings = meter.getReadings();
 
@@ -312,8 +311,8 @@ public class StatsFragment extends BaseFragment
                 String averageString = String.format(USAGE_FORMAT, average, UNITS);
 
 
-                billComparisonUsageData.setText(usageString);
-                billComparisonDailyAveData.setText(averageString);
+                binding.billComparisonUsageData.setText(usageString);
+                binding.billComparisonDailyAveData.setText(averageString);
         }
 
         private int findIndex(Meter meter, int startIndex, String findDate) {
@@ -346,12 +345,12 @@ public class StatsFragment extends BaseFragment
                 String firstReading = readings.get(0).getTimeStamp();
                 String lastReading = readings.get(readingCount - 1).getTimeStamp();
 
-                billComparisonStartDate.setText(firstReading);
-                billComparisonEndDate.setText(lastReading);
+                binding.billComparisonStartDate.setText(firstReading);
+                binding.billComparisonEndDate.setText(lastReading);
         }
 
         private void resetBillComparisonResults() {
-                billComparisonUsageData.setText("");
-                billComparisonDailyAveData.setText("");
+                binding.billComparisonUsageData.setText("");
+                binding.billComparisonDailyAveData.setText("");
         }
 }

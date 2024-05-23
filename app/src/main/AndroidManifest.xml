@@ -3,6 +3,7 @@
     package="com.nathanson.meterreader" >
 
     <uses-permission android:required="true" android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:required="true" android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
 
     <application

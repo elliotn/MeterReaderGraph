@@ -16,7 +16,15 @@
 
 package com.nathanson.meterreader;
 
+import static com.nathanson.meterreader.util.NotificationHelper.CHANNEL_ID;
+
 import android.app.Application;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Build;
+import android.provider.Settings;
 
 import com.nathanson.meterreader.persistence.MeterReaderSharedPreferences;
 
@@ -33,6 +41,7 @@ public class MeterReaderApplication extends Application {
 
         mSharedPrefs = MeterReaderSharedPreferences.getInstance(this);
         sInstance = this;
+        setupNotification();
     }
 
     public static MeterReaderApplication getInstance() {
@@ -43,4 +52,46 @@ public class MeterReaderApplication extends Application {
         return mSharedPrefs;
     }
 
+    private void setupNotification() {
+        NotificationManager mNotificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            if (sendToNotificationSettings(mNotificationManager)) {
+                Intent i = new Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS);
+                i.putExtra(Settings.EXTRA_APP_PACKAGE, getPackageName());
+                startActivity(i);
+            }
+
+            // TODO: how to make sound STOP!!!!!!
+            NotificationChannel mChannel = new NotificationChannel(CHANNEL_ID,
+                    getString(R.string.notifications_category),
+                    NotificationManager.IMPORTANCE_NONE);
+            mChannel.enableVibration(false);
+            mNotificationManager.createNotificationChannel(mChannel);
+        }
+    }
+
+    /**
+     * Check to see if notification channel/groups have been allowed by user.
+     * @param notifyMgr
+     * @return true if user needs to go to settings, false otherwise.
+     */
+    private static boolean sendToNotificationSettings(NotificationManager notifyMgr) {
+        MeterReaderApplication application = MeterReaderApplication.getInstance();
+
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O &&
+                application.getSharedPrefs().getNotificationSettings()) {
+            for (NotificationChannel notificationChannel : notifyMgr.getNotificationChannels()) {
+                if (notificationChannel.getImportance() == NotificationManager.IMPORTANCE_NONE) {
+                    application.getSharedPrefs().setNotificationSettings(false);
+                    return true;
+                }
+            }
+        }
+
+        // no need
+        return false;
+    }
 }

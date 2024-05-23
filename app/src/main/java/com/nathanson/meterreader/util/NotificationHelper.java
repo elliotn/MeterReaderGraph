@@ -1,6 +1,6 @@
-/* 
+/*
  * Copyright (C) 2015 Elliot Nathanson
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -16,7 +16,8 @@
 
 package com.nathanson.meterreader.util;
 
-import android.app.Notification;
+import static android.app.PendingIntent.FLAG_MUTABLE;
+
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.TaskStackBuilder;
@@ -24,27 +25,21 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 
-import com.nathanson.meterreader.activity.MainActivity;
+import androidx.core.app.NotificationCompat;
+
 import com.nathanson.meterreader.MeterReaderApplication;
 import com.nathanson.meterreader.R;
+import com.nathanson.meterreader.activity.MainActivity;
 import com.nathanson.meterreader.data.Meter;
 import com.nathanson.meterreader.fetch.DataFetcher;
 
 public class NotificationHelper {
 
-    private static final int DEFAULT_ID = 1;
+    public static final String CHANNEL_ID = "2222";
 
     private NotificationHelper() {}
 
     private static void showNotification(Context context, String title, String message) {
-        // code stolen from google sample.
-        Notification.Builder mBuilder =
-                new Notification.Builder(context)
-                        .setSmallIcon(R.drawable.ic_warning_white_24dp)
-                        .setContentTitle(title)
-                        .setContentText(message)
-                        .setAutoCancel(true);
-
         // Creates an explicit intent for an Activity in your app
         Intent resultIntent = new Intent(context, MainActivity.class);
 
@@ -60,14 +55,25 @@ public class NotificationHelper {
         PendingIntent resultPendingIntent =
                 stackBuilder.getPendingIntent(
                         0,
-                        PendingIntent.FLAG_UPDATE_CURRENT
+                        PendingIntent.FLAG_UPDATE_CURRENT | FLAG_MUTABLE
                 );
-        mBuilder.setContentIntent(resultPendingIntent);
+
+        NotificationCompat.Builder notification = new NotificationCompat.Builder(context, CHANNEL_ID)
+                .setContentIntent(resultPendingIntent)
+                .setSmallIcon(R.drawable.ic_warning_white_24dp)
+                .setContentTitle(context.getString(R.string.app_name))
+                .setContentTitle(title)
+                .setContentText(message);
+
+
         NotificationManager mNotificationManager =
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
-        // mId allows you to update the notification later on.
-        mNotificationManager.notify(DEFAULT_ID, mBuilder.build());
+        int mNotificationId = 1111;
+
+        // Builds the notification and issues it.
+        mNotificationManager.notify(mNotificationId, notification.build());
+
     }
 
     public static void showThresholdExceededNotification(Context context, Meter meter) {

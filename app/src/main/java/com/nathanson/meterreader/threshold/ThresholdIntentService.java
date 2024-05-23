@@ -19,7 +19,6 @@ package com.nathanson.meterreader.threshold;
 import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 
 import com.nathanson.meterreader.MeterReaderApplication;
 import com.nathanson.meterreader.data.Meter;

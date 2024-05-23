@@ -31,10 +31,7 @@ public class ToastHelper {
 
 
     public static void showToast(Context context, String message) {
-        int yOffset = context.getResources().getDimensionPixelSize(R.dimen.toast_y_offset);
-
         Toast toast = Toast.makeText(context, message, Toast.LENGTH_SHORT);
-        toast.setGravity(Gravity.BOTTOM, 0, yOffset);
         toast.show();
     }
 

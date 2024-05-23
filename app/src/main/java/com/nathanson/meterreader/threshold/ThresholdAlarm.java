@@ -31,7 +31,7 @@ public class ThresholdAlarm {
 
     private PendingIntent getPendingIntent(Context context) {
         Intent thresholdIntent = new Intent(context, ThresholdIntentService.class);
-            PendingIntent pendingIntent = PendingIntent.getService(context, 0, thresholdIntent, PendingIntent.FLAG_IMMUTABLE);
+        PendingIntent pendingIntent = PendingIntent.getService(context, 0, thresholdIntent, PendingIntent.FLAG_IMMUTABLE);
 
         return  pendingIntent;
     }

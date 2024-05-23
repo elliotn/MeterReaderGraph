@@ -1,6 +1,6 @@
-/* 
+/*
  * Copyright (C) 2015 Elliot Nathanson
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -33,7 +33,7 @@ public class MeterReaderSharedPreferences {
     private static final String SETTINGS_AUTOCHECK_HOUR = "SETTINGS_AUTOCHECK_HOUR";
     private static final String SETTINGS_AUTOCHECK_MIN = "SETTINGS_AUTOCHECK_MIN";
     private static final String SETTINGS_UNITS = "SETTINGS_UNITS";
-
+    private static final String SHOW_ANDROID_O_NOTIFICATION_SETTINGS = "SHOW_ANDROID_O_NOTIFICATION_SETTINGS";
 
     private volatile static MeterReaderSharedPreferences INSTANCE;
     private SharedPreferences mSharedPrefs;
@@ -135,6 +135,18 @@ public class MeterReaderSharedPreferences {
         return INSTANCE.mSharedPrefs
                 .getString(SETTINGS_UNITS, MeterReaderApplication.getInstance().getResources()
                         .getString(R.string.default_units));
+    }
+
+    public void setNotificationSettings(boolean showInfo) {
+        INSTANCE.mSharedPrefs
+                .edit()
+                .putBoolean(SHOW_ANDROID_O_NOTIFICATION_SETTINGS, showInfo)
+                .apply();
+    }
+
+    public Boolean getNotificationSettings() {
+        return INSTANCE.mSharedPrefs
+                .getBoolean(SHOW_ANDROID_O_NOTIFICATION_SETTINGS, false);
     }
 }
 

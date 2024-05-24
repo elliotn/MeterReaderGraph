@@ -61,7 +61,6 @@ public class NotificationHelper {
         NotificationCompat.Builder notification = new NotificationCompat.Builder(context, CHANNEL_ID)
                 .setContentIntent(resultPendingIntent)
                 .setSmallIcon(R.drawable.ic_warning_white_24dp)
-                .setContentTitle(context.getString(R.string.app_name))
                 .setContentTitle(title)
                 .setContentText(message);
 

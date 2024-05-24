@@ -134,7 +134,7 @@ public class SettingsFragment extends BaseFragment
 
         mSharedPrefs.setUnits(binding.units.getText().toString());
 
-        Context context = getActivity().getApplicationContext();
+        Context context = MeterReaderApplication.getInstance().getApplicationContext();
         ThresholdAlarm alarm = new ThresholdAlarm();
         // cancel any previously set alarm.
         alarm.cancel(context);

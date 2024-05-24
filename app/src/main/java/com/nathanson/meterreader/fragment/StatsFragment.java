@@ -48,34 +48,6 @@ public class StatsFragment extends BaseFragment
         private long mMinDate;
         private long mMaxDate;
 
-//        @Bind(R.id.last30Days)
-//        TextView last30Days;
-//        @Bind(R.id.last30DaysUsage)
-//        TextView last30DaysUsage;
-//        @Bind(R.id.last30DaysUsageData)
-//        TextView last30DaysUsageData;
-//        @Bind(R.id.last30DaysDailyAveData)
-//        TextView last30DaysDailyAveData;
-//        @Bind(R.id.billComparison)
-//        TextView billComparison;
-//        @Bind(R.id.billComparisonStart)
-//        TextView billComparisonStart;
-//        @Bind(R.id.billComparisonStartDate)
-//        TextView billComparisonStartDate;
-//        @Bind(R.id.billComparisonEnd)
-//        TextView billComparisonEnd;
-//        @Bind(R.id.billComparisonEndDate)
-//        TextView billComparisonEndDate;
-//        @Bind(R.id.billComparisonCalculate)
-//        Button billComparisonCalculate;
-//        @Bind(R.id.billComparisonUsage)
-//        TextView billComparisonUsage;
-//        @Bind(R.id.billComparisonUsageData)
-//        TextView billComparisonUsageData;
-//        @Bind(R.id.billComparisonDailyAveData)
-//        TextView billComparisonDailyAveData;
-
-
         private List<Meter> mMeters;
 
         private final String UNITS = MeterReaderApplication.getInstance().getSharedPrefs().getUnits();

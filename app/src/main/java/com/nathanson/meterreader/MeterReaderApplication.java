@@ -1,6 +1,6 @@
-/* 
+/*
  * Copyright (C) 2015 Elliot Nathanson
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -56,20 +56,12 @@ public class MeterReaderApplication extends Application {
         NotificationManager mNotificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            if (sendToNotificationSettings(mNotificationManager)) {
-                Intent i = new Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS);
-                i.putExtra(Settings.EXTRA_APP_PACKAGE, getPackageName());
-                startActivity(i);
-            }
-
-            // TODO: how to make sound STOP!!!!!!
-            NotificationChannel mChannel = new NotificationChannel(CHANNEL_ID,
-                    getString(R.string.notifications_category),
-                    NotificationManager.IMPORTANCE_NONE);
-            mChannel.enableVibration(false);
-            mNotificationManager.createNotificationChannel(mChannel);
-        }
+        // TODO: how to make sound STOP!!!!!!
+        NotificationChannel mChannel = new NotificationChannel(CHANNEL_ID,
+                getString(R.string.notifications_category),
+                NotificationManager.IMPORTANCE_DEFAULT);
+        mChannel.enableVibration(false);
+        mNotificationManager.createNotificationChannel(mChannel);
     }
 
     /**
@@ -80,14 +72,10 @@ public class MeterReaderApplication extends Application {
     private static boolean sendToNotificationSettings(NotificationManager notifyMgr) {
         MeterReaderApplication application = MeterReaderApplication.getInstance();
 
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O &&
-                application.getSharedPrefs().getNotificationSettings()) {
-            for (NotificationChannel notificationChannel : notifyMgr.getNotificationChannels()) {
-                if (notificationChannel.getImportance() == NotificationManager.IMPORTANCE_NONE) {
-                    application.getSharedPrefs().setNotificationSettings(false);
-                    return true;
-                }
+        for (NotificationChannel notificationChannel : notifyMgr.getNotificationChannels()) {
+            if (notificationChannel.getImportance() == NotificationManager.IMPORTANCE_NONE) {
+                application.getSharedPrefs().setNotificationSettings(false);
+                return true;
             }
         }
 

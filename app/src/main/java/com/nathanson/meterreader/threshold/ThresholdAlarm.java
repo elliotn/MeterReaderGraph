@@ -16,11 +16,12 @@
 
 package com.nathanson.meterreader.threshold;
 
+import static android.app.PendingIntent.FLAG_MUTABLE;
+
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.os.SystemClock;
 import android.util.Log;
 
 import com.nathanson.meterreader.R;
@@ -30,10 +31,8 @@ import java.util.Calendar;
 public class ThresholdAlarm {
 
     private PendingIntent getPendingIntent(Context context) {
-        Intent thresholdIntent = new Intent(context, ThresholdIntentService.class);
-        PendingIntent pendingIntent = PendingIntent.getService(context, 0, thresholdIntent, PendingIntent.FLAG_IMMUTABLE);
-
-        return  pendingIntent;
+        Intent thresholdIntent = new Intent(context, ThresholdBroadcastReceiver.class);
+        return PendingIntent.getBroadcast(context, 1111 ,thresholdIntent, PendingIntent.FLAG_UPDATE_CURRENT | FLAG_MUTABLE);
     }
 
 
@@ -69,10 +68,13 @@ public class ThresholdAlarm {
         }
 
         // setup repeating alarm for tomorrow.
-        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP,
-                runTime,
-                AlarmManager.INTERVAL_DAY,
-                getPendingIntent(context));
+        if (alarmManager.canScheduleExactAlarms()) {
+            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP,
+                    runTime,
+                    getPendingIntent(context));
+        } else {
+            Log.i(context.getResources().getString(R.string.app_name), "unable to schedule exact alarm!");
+        }
 
         Log.i(context.getResources().getString(R.string.app_name),
                 "Threshold alarm scheduled for tomorrow at " + hour + ":" + min);

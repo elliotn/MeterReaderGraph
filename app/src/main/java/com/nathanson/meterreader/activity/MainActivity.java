@@ -17,10 +17,14 @@
 package com.nathanson.meterreader.activity;
 
 
+import static android.provider.Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM;
+
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -28,6 +32,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.Window;
 
+import androidx.core.content.ContextCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.nathanson.meterreader.R;
@@ -87,6 +92,17 @@ public class MainActivity extends Activity
         fragmentManager.beginTransaction()
                 .replace(R.id.container, frag != null ? frag : fragmentFactory(position), fragmentTag)
                 .commit();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        if (!alarmManager.canScheduleExactAlarms()) {
+            // Ask users to go to exact alarm page in system settings.
+            ContextCompat.startActivity(this, new Intent(ACTION_REQUEST_SCHEDULE_EXACT_ALARM), new Bundle());
+        }
     }
 
     private Fragment fragmentFactory (int position) {

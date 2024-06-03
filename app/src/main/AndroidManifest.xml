@@ -6,6 +6,10 @@
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:required="true" android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
 
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+    <!-- TODO: is this perm really necessary? -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+
     <application
         android:name="com.nathanson.meterreader.MeterReaderApplication"
         android:allowBackup="true"

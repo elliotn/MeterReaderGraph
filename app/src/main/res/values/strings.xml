@@ -20,7 +20,7 @@
   <string name="data_fetch_server_error">Unable to get server response.</string>
 
   <string name="threshold_notification_title">Meter threshold exceeded</string>
-  <string name="threshold_notification_message">Used %1$s %2$s yesterday.</string>
+  <string name="threshold_notification_message">Used %1$d %2$s yesterday.</string>
 
   <string name="threshold_failure_title">Meter reading failure</string>
   <string name="threshold_failure_message">Unable to check usage.</string>

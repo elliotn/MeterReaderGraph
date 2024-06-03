@@ -19,6 +19,7 @@ package com.nathanson.meterreader.threshold;
 import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 
 import com.nathanson.meterreader.MeterReaderApplication;
 import com.nathanson.meterreader.data.Meter;
@@ -33,6 +34,8 @@ public class ThresholdIntentService extends IntentService
 
     public static final String BOOT_EVENT = "BOOT_EVENT";
 
+    private static final String TAG = "ThresholdIntentService";
+
     private boolean mBootEvent = false;
 
     public ThresholdIntentService() {
@@ -46,11 +49,13 @@ public class ThresholdIntentService extends IntentService
     }
 
     private void fetchData() {
+        Log.d(TAG, "fetchData() called");
         DataFetcher.getInstance(getApplicationContext()).fetchData(this);
     }
 
     @Override
     public void onDataFetched(List<Meter> meters) {
+        Log.d(TAG, "onDataFetched() called with: meters = [" + meters + "]");
         // TODO: cache data and reuse when app started by user?
 
         // only reading one meter.

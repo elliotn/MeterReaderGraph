@@ -41,12 +41,6 @@
             </intent-filter>
         </receiver>
 
-         <!-- intent service for checking threshold -->
-        <service
-            android:name=".threshold.ThresholdIntentService"
-            android:exported="false"
-            />
-
     </application>
 
 </manifest>

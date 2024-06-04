@@ -20,23 +20,19 @@ import android.content.Context
 import android.content.Intent
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
+import com.nathanson.meterreader.MeterReaderApplication
 
 
 class ThresholdBroadcastReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
-        val oneTimeWorkRequest = OneTimeWorkRequestBuilder<ThresholdWorker>().build()
-        WorkManager.getInstance(context).enqueue(oneTimeWorkRequest)
+        val sharedPrefs =
+            MeterReaderApplication.getInstance().sharedPrefs
 
-        // TODO: revisit the shared prefs stuff.
-//        val sharedPrefs =
-//            MeterReaderApplication.getInstance().sharedPrefs
-
-//         honor user's setting for auto-checking meter at boot up.
-//        if (sharedPrefs.getAutocheck()) {
-//            Intent thresholdIntent = new Intent(context, ThresholdIntentService.class);
-//            thresholdIntent.putExtra(ThresholdIntentService.BOOT_EVENT, true);
-//            context.startForegroundService(thresholdIntent);
-//        }
+        // honor user's setting for auto-checking meter at boot up.
+        if (sharedPrefs.autocheck) {
+            val oneTimeWorkRequest = OneTimeWorkRequestBuilder<ThresholdWorker>().build()
+            WorkManager.getInstance(context).enqueue(oneTimeWorkRequest)
+        }
     }
 }
 

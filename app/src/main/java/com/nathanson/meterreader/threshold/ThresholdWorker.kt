@@ -33,8 +33,6 @@ class ThresholdWorker (ctx: Context, params: WorkerParameters) : ListenableWorke
         private const val TAG = "ThresholdWorker"
     }
 
-    private val mBootEvent = false
-
     override fun startWork(): ListenableFuture<Result> {
         return CallbackToFutureAdapter.getFuture { completer ->
 
@@ -60,7 +58,7 @@ class ThresholdWorker (ctx: Context, params: WorkerParameters) : ListenableWorke
 
 
                     // setup alarm, if applicable.
-                    if (mBootEvent && sharedPrefs.autocheck) {
+                    if (sharedPrefs.autocheck) {
                         val hour = sharedPrefs.autocheckHour
                         val min = sharedPrefs.autocheckMin
                         if (hour != -1 && min != -1) {

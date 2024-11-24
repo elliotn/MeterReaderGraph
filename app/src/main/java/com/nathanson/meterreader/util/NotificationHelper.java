@@ -62,7 +62,8 @@ public class NotificationHelper {
                 .setContentIntent(resultPendingIntent)
                 .setSmallIcon(R.drawable.ic_warning_white_24dp)
                 .setContentTitle(title)
-                .setContentText(message);
+                .setContentText(message)
+                .setAutoCancel(true);
 
 
         NotificationManager mNotificationManager =
@@ -70,6 +71,7 @@ public class NotificationHelper {
 
         int mNotificationId = 1111;
 
+        mNotificationManager.cancel(mNotificationId);
         // Builds the notification and issues it.
         mNotificationManager.notify(mNotificationId, notification.build());
 

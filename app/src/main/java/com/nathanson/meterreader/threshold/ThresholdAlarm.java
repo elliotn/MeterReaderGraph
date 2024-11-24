@@ -32,7 +32,8 @@ public class ThresholdAlarm {
 
     private PendingIntent getPendingIntent(Context context) {
         Intent thresholdIntent = new Intent(context, ThresholdBroadcastReceiver.class);
-        return PendingIntent.getBroadcast(context, 1111 ,thresholdIntent, PendingIntent.FLAG_UPDATE_CURRENT | FLAG_MUTABLE);
+        thresholdIntent.setAction("com.nathanson.fake_boot_completed");
+        return PendingIntent.getBroadcast(context, 1111, thresholdIntent, PendingIntent.FLAG_UPDATE_CURRENT | FLAG_MUTABLE);
     }
 
 
@@ -63,7 +64,7 @@ public class ThresholdAlarm {
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
         long runTime= runTime(hour, min);
-        if (runTime <= 0) {
+        if (runTime <= 0 || runTime < System.currentTimeMillis()) {
             return;
         }
 

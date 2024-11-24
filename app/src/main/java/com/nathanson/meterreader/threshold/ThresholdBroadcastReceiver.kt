@@ -24,7 +24,13 @@ import com.nathanson.meterreader.MeterReaderApplication
 
 
 class ThresholdBroadcastReceiver : BroadcastReceiver() {
+    private val validIntents = setOf(
+        Intent.ACTION_BOOT_COMPLETED,
+        "com.nathanson.fake_boot_completed"
+    )
     override fun onReceive(context: Context, intent: Intent) {
+        if (intent.action !in validIntents) return
+
         val sharedPrefs =
             MeterReaderApplication.getInstance().sharedPrefs
 
